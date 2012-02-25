@@ -1,0 +1,7 @@
+Changelog for SE Manager.
+
+1.0.0 alpha1 (25.02.2012)
+==============
+- Первый публичный релиз
+-----
+- First public release

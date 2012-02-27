@@ -24,12 +24,12 @@ SEManager.grid.Plugins = function(config) {
             ,dataIndex: 'name'
             ,sortable: true
         },{
-            header: _('static')
+            header: 'is_static'
             ,dataIndex: 'static'
             ,width: 100
             ,sortable: true
         },{
-            header: _('static_file')
+            header: 'path_to_file'
             ,dataIndex: 'static_file'
         }]
         ,listeners: {

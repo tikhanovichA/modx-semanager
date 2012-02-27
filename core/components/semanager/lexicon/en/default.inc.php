@@ -19,6 +19,8 @@
  * Place, Suite 330, Boston, MA 02111-1307 USA
  *
  * @package semanager
+ * @subpackage lexicon
  *
  **/
-
+$_lang['semanager'] = 'SE Manager';
+$_lang['semanager_desc'] = 'Manager for extra control of Static Elements';

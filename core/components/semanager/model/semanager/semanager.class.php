@@ -50,7 +50,9 @@ class SEManager
             'processorsPath' => $corePath.'processors/',
         ),$config);
 
-        $this->modx->lexicon->load('semanager:default');
+        if ($this->modx->lexicon) {
+            $this->modx->lexicon->load('semanager:default');
+        }
 
         // Вывод ошибок debug only
         ini_set('display_errors', 1);
@@ -67,30 +69,20 @@ class SEManager
         switch($ctx){
             case "mgr":
 
-                $this->modx->regClientStartupScript($this->config['jsUrl'].'mgr/semanager.js');
-                $this->modx->regClientStartupHTMLBlock('
-                    <script type="text/javascript">
-                        Ext.onReady(function() {
-                            SEManager.config = '.$this->modx->toJSON($this->config).';
-                            SEManager.config.connector_url = "'.$this->config['connectorUrl'].'";
-                            SEManager.config.connectors_url = "'.$this->config['connectorsUrl'].'";
-                            SEManager.action = "'.(!empty($_REQUEST['a']) ? $_REQUEST['a'] : 0).'";
-                        });
-                    </script>');
-                $this->modx->regClientStartupScript($this->config['jsUrl'].'mgr/widgets/home.panel.js');
-                $this->modx->regClientStartupScript($this->config['jsUrl'].'mgr/sections/home.js');
-                $output = '<div id="semanager-panel-home-div"></div>';
+                if (!$this->modx->loadClass('semanager.request.SEManagerControllerRequest',$this->config['modelPath'],true,true)) {
+                    return 'Could not load controller request handler.';
+                }
+                $this->request = new SEManagerControllerRequest($this);
 
-                return $output;
-                #return 'SE Manager admin';
+                return $this->request->handleRequest();
 
                 break;
             case "web":
+                return '';
                 break;
             default:
+                return '';
                 break;
         }
-
     }
-
 }

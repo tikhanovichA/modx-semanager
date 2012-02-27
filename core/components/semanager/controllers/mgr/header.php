@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * SE Manager
  *
  * Copyright 2012 by Ivan Klimchuk <ivan@klimchuk.com>
@@ -19,8 +18,18 @@
  * Place, Suite 330, Boston, MA 02111-1307 USA
  *
  * @package semanager
- * @subpackage lexicon
- *
- **/
-$_lang['semanager'] = 'SE Manager';
-$_lang['semanager_desc'] = 'Модуль для расширенного контроля Статических Элементов';
+ * @subpackage controllers
+ */
+
+$modx->regClientStartupScript($semanager->config['jsUrl'].'mgr/semanager.js');
+$modx->regClientStartupHTMLBlock('
+    <script type="text/javascript">
+        Ext.onReady(function() {
+            SEManager.config = '.$modx->toJSON($semanager->config).';
+            SEManager.config.connector_url = "'.$semanager->config['connectorUrl'].'";
+            SEManager.config.connectors_url = "'.$semanager->config['connectorsUrl'].'";
+            SEManager.action = "'.(!empty($_REQUEST['a']) ? $_REQUEST['a'] : 0).'";
+        });
+    </script>');
+return '';
+

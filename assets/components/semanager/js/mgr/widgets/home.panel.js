@@ -5,8 +5,8 @@ SEManager.panel.Home = function(config) {
         ,baseCls: 'modx-formpanel'
         ,cls: 'container'
         ,items: [{
-             //html: '<h2>'+_('semanager')+'</h2>'
-            html: '<h2>SE Manager</h2>'
+            html: '<h2>'+_('semanager')+'</h2>'
+            //html: '<h2>SE Manager</h2>'
             ,border: false
             ,cls: 'modx-page-header'
         },{
@@ -18,34 +18,65 @@ SEManager.panel.Home = function(config) {
             ,stateful: true
             ,stateId: 'sem-tabpanel-home'
             ,stateEvents: ['tabchange']
-            ,getState:function() {
+            ,getState: function() {
                 return { activeTab:this.items.indexOf(this.getActiveTab()) };
             }
             ,items: [{
-                title: 'Snippets'//_('ms.orders')
-                /*,items: [{
-                    html: 'snippets'//'<p>'+_('ms.orders.intro_msg')+'</p><br />'
+                title: _('snippets')
+                ,items: [{
+                    html: '<p>'+_('semanager_desc')+'</p>'
                     ,border: false
+                    ,bodyCssClass: 'panel-desc'
                 },{
-                    xtype: 'minishop-grid-orders'
+                    xtype: 'semanager-grid-snippets'
                     ,preventRender: true
-                }]*/
+                    ,cls: 'main-wrapper'
+                }]
                 ,listeners: {
-                    activate : function(panel){
-                        //Ext.getCmp('minishop-grid-warehouses').refresh();
-                    }
+
                 }
             },{
-                title: 'Chunks'
+                title: _('chunks')
+                ,items: [{
+                    html: '<p>'+_('chunks')+'</p>'
+                    ,border: false
+                    ,bodyCssClass: 'panel-desc'
+                },{
+                    xtype: 'semanager-grid-chunks'
+                    ,preventRender: true
+                    ,cls: 'main-wrapper'
+                }]
                 ,listeners: {
-                    activate: function(panel){
-                        // pass
-                    }
+
                 }
             },{
-                title: 'Templates'
+                title: _('templates')
+                ,items: [{
+                    html: '<p>'+_('templates')+'</p>'
+                    ,border: false
+                    ,bodyCssClass: 'panel-desc'
+                },{
+                    xtype: 'semanager-grid-templates'
+                    ,preventRender: true
+                    ,cls: 'main-wrapper'
+                }]
+                ,listeners: {
+
+                }
             },{
-                title: 'Plugins'
+                title: _('plugins')
+                ,items: [{
+                    html: '<p>'+_('plugins')+'</p>'
+                    ,border: false
+                    ,bodyCssClass: 'panel-desc'
+                },{
+                    xtype: 'semanager-grid-plugins'
+                    ,preventRender: true
+                    ,cls: 'main-wrapper'
+                }]
+                ,listeners: {
+
+                }
             },{
                 title: 'Other Settings'
             }] } ]/*,{

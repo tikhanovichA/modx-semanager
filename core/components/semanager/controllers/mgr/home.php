@@ -21,10 +21,17 @@
  * @subpackage controllers
  */
 
+
 $modx->regClientStartupScript($semanager->config['jsUrl'].'mgr/widgets/snippets.grid.js');
 $modx->regClientStartupScript($semanager->config['jsUrl'].'mgr/widgets/chunks.grid.js');
 $modx->regClientStartupScript($semanager->config['jsUrl'].'mgr/widgets/templates.grid.js');
 $modx->regClientStartupScript($semanager->config['jsUrl'].'mgr/widgets/plugins.grid.js');
+
+$modx->regClientStartupScript($semanager->config['jsUrl'].'mgr/widgets/plugins.tab.js');
+$modx->regClientStartupScript($semanager->config['jsUrl'].'mgr/widgets/templates.tab.js');
+$modx->regClientStartupScript($semanager->config['jsUrl'].'mgr/widgets/chunks.tab.js');
+$modx->regClientStartupScript($semanager->config['jsUrl'].'mgr/widgets/snippets.tab.js');
+$modx->regClientStartupScript($semanager->config['jsUrl'].'mgr/widgets/common.tab.js');
 $modx->regClientStartupScript($semanager->config['jsUrl'].'mgr/widgets/home.panel.js');
 $modx->regClientStartupScript($semanager->config['jsUrl'].'mgr/sections/home.js');
 

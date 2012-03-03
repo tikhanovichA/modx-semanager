@@ -37,31 +37,11 @@ $query = $modx->getOption('query',$_REQUEST, 0);
 
 $c = $modx->newQuery('modTemplate');
 
-
-//$c->where(array('modResource.deleted' => false, 'modResource.template:IN' => $goods_tpls));
-
-// Фильтрация по категории
-//if (!empty($category)) {
-//    $c->andCondition(array('parent' => $category), '', 1);
-//
-//    $ids = $modx->miniShop->getGoodsByCategories($category);
-//    if (!empty($ids)) {
-//        $c->orCondition(array('id:IN' => $ids), '', 1);
-//    }
-//}
-
-// Фильтрация по строке поиска
-//if (!empty($query)) {
-//    // Поиск по названию и артиклю
-//    $c->andCondition(array('modResource.pagetitle:LIKE' => '%'.$query.'%'), '', 2);
-//    $c->orCondition(array('ModGoods.article:LIKE' => '%'.$query.'%'), '', 2);
-//}
-
 $count = $modx->getCount('modTemplate',$c);
 
 /*if ($sort == 'id') {$sort = 'modSnippet.id';}
-$c->sortby($sort,$dir);
-if ($isLimit) {$c->limit($limit,$start);}*/
+$c->sortby($sort,$dir);    */
+if ($isLimit) {$c->limit($limit,$start);}
 $elements = $modx->getCollection('modTemplate', $c);
 
 $list = array();

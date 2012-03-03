@@ -5,24 +5,32 @@ SEManager.panel.Home = function(config) {
         ,baseCls: 'modx-formpanel'
         ,cls: 'container'
         ,items: [{
-            //html: '<h2>'+_('semanager')+'</h2>'
             html: '<h2>SE Manager</h2>'
             ,border: false
             ,cls: 'modx-page-header'
         },{
             xtype: 'modx-tabs'
-            ,defaults: { border: false ,autoHeight: true }
+            ,defaults: {
+                autoHeight: true
+            }
             ,border: true
-            //,activeItem: 0
             ,hideMode: 'offsets'
+            ,cls: 'x-form-label-top'
             ,stateful: true
-            ,stateId: 'sem-tabpanel-home'
+            ,stateId: 'semanager-tabpanel-home'
             ,stateEvents: ['tabchange']
             ,getState: function() {
                 return { activeTab:this.items.indexOf(this.getActiveTab()) };
             }
             ,items: [{
-                title: _('snippets')
+                title: 'Common'
+                ,id: 'semanager-tab-common'
+                ,items: [{
+                    xtype: "semanager-tab-common"
+                }]
+            },{
+                title: 'Snippets'
+                ,id: 'semanager-tab-snippets'
                 ,items: [{
                     html: '<p>'+_('semanager_desc')+'</p>'
                     ,border: false
@@ -77,8 +85,6 @@ SEManager.panel.Home = function(config) {
                 ,listeners: {
 
                 }
-            },{
-                title: 'Other Settings'
             }] } ]/*,{
                 title: _('ms.goods')
                 ,items: [{

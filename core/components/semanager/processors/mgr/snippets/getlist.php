@@ -30,38 +30,18 @@ if (!$modx->hasPermission('view')) {return $modx->error->failure($modx->lexicon(
 
 $isLimit = !empty($_REQUEST['limit']);
 $start = $modx->getOption('start',$_REQUEST,0);
-$limit = $modx->getOption('limit',$_REQUEST,20);
+$limit = $modx->getOption('limit',$_REQUEST,10);
 $sort = $modx->getOption('sort',$_REQUEST,'pagetitle');
 $dir = $modx->getOption('dir',$_REQUEST,'ASC');
 $query = $modx->getOption('query',$_REQUEST, 0);
 
 $c = $modx->newQuery('modSnippet');
 
-
-//$c->where(array('modResource.deleted' => false, 'modResource.template:IN' => $goods_tpls));
-
-// Фильтрация по категории
-//if (!empty($category)) {
-//    $c->andCondition(array('parent' => $category), '', 1);
-//
-//    $ids = $modx->miniShop->getGoodsByCategories($category);
-//    if (!empty($ids)) {
-//        $c->orCondition(array('id:IN' => $ids), '', 1);
-//    }
-//}
-
-// Фильтрация по строке поиска
-//if (!empty($query)) {
-//    // Поиск по названию и артиклю
-//    $c->andCondition(array('modResource.pagetitle:LIKE' => '%'.$query.'%'), '', 2);
-//    $c->orCondition(array('ModGoods.article:LIKE' => '%'.$query.'%'), '', 2);
-//}
-
 $count = $modx->getCount('modSnippet',$c);
 
-/*if ($sort == 'id') {$sort = 'modSnippet.id';}
-$c->sortby($sort,$dir);
-if ($isLimit) {$c->limit($limit,$start);}*/
+#if ($sort == 'id') {$sort = 'modSnippet.id';}
+#$c->sortby($sort,$dir);
+if ($isLimit) {$c->limit($limit,$start);}
 $elements = $modx->getCollection('modSnippet', $c);
 
 $list = array();

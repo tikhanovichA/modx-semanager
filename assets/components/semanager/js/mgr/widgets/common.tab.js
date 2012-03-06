@@ -53,8 +53,12 @@ SEManager.panel.CommonTab = function(config) {
                 ,description: MODx.expandHelp ? '' : 'articles.setting.commentsAnonymousName_desc'
                 ,anchor: '100%'
                 ,value: '{assets}/elements/'
-                ,style: {
-                    marginLeft: '-105px'
+                ,listeners: {
+                    render: function(p) {
+                        p.getEl().parent().applyStyles({
+                            paddingLeft: '0px'
+                        });
+                    }
                 }
             },{
                 xtype: MODx.expandHelp ? 'label' : 'hidden'
@@ -69,8 +73,12 @@ SEManager.panel.CommonTab = function(config) {
                 ,description: MODx.expandHelp ? '' : 'help'
                 ,anchor: '100%'
                 ,value: '{name}.sn.php'
-                ,style: {
-                    marginLeft: '-105px'
+                ,listeners: {
+                    render: function(p) {
+                        p.getEl().parent().applyStyles({
+                            paddingLeft: '0px'
+                        });
+                    }
                 }
             },{
                 xtype: MODx.expandHelp ? 'label' : 'hidden'
@@ -85,8 +93,12 @@ SEManager.panel.CommonTab = function(config) {
                 ,description: MODx.expandHelp ? '' : 'help'
                 ,anchor: '100%'
                 ,value: '{name}.tp.html'
-                ,style: {
-                    marginLeft: '-105px'
+                ,listeners: {
+                    render: function(p) {
+                        p.getEl().parent().applyStyles({
+                            paddingLeft: '0px'
+                        });
+                    }
                 }
             },{
                 xtype: MODx.expandHelp ? 'label' : 'hidden'
@@ -101,8 +113,12 @@ SEManager.panel.CommonTab = function(config) {
                 ,description: MODx.expandHelp ? '' : 'help'
                 ,anchor: '100%'
                 ,value: '{name}.ch.html'
-                ,style: {
-                    marginLeft: '-105px'
+                ,listeners: {
+                    render: function(p) {
+                        p.getEl().parent().applyStyles({
+                            paddingLeft: '0px'
+                        });
+                    }
                 }
             },{
                 xtype: MODx.expandHelp ? 'label' : 'hidden'
@@ -117,8 +133,12 @@ SEManager.panel.CommonTab = function(config) {
                 ,description: MODx.expandHelp ? '' : 'help'
                 ,anchor: '100%'
                 ,value: '{name}.pl.php'
-                ,style: {
-                    marginLeft: '-105px'
+                ,listeners: {
+                    render: function(p) {
+                        p.getEl().parent().applyStyles({
+                            paddingLeft: '0px'
+                        });
+                    }
                 }
             },{
                 xtype: MODx.expandHelp ? 'label' : 'hidden'

@@ -54,10 +54,6 @@ class SEManager
             $this->modx->lexicon->load('semanager:default');
         }
 
-        #$f = $this->modx->lexicon->getFileTopic($language='en', $namespace='semanager', $topic='default');
-        #print_r($f);
-        #exit;
-
         // Вывод ошибок debug only
         ini_set('display_errors', 1);
         error_reporting(E_ALL);

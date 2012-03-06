@@ -30,21 +30,9 @@ SEManager.panel.Home = function(config) {
                 }]
             },{
                 title: 'Snippets'
-                ,id: 'semanager-tab-snippets'
-                ,items: [{
-                    html: '<p>'+_('semanager_desc')+'</p>'
-                    ,border: false
-                    ,bodyCssClass: 'panel-desc'
-                },{
-                    xtype: 'semanager-grid-snippets'
-                    ,preventRender: true
-                    ,cls: 'main-wrapper'
-                }]
-                ,listeners: {
-
-                }
+                ,xtype: 'semanager-tab-snippets'
             },{
-                title: _('chunks')
+                title: 'Chunks'
                 ,items: [{
                     html: '<p>'+_('chunks')+'</p>'
                     ,border: false
@@ -85,50 +73,8 @@ SEManager.panel.Home = function(config) {
                 ,listeners: {
 
                 }
-            }] } ]/*,{
-                title: _('ms.goods')
-                ,items: [{
-                    html: '<p>'+_('ms.goods.intro_msg')+'</p><br />'
-                    ,border: false
-                },{
-                    xtype: 'minishop-grid-goods'
-                    ,preventRender: true
-                }]
-                ,listeners: {
-                    activate : function(panel){
-                        //Ext.getCmp('minishop-grid-goods').refresh();
-                    }
-                }
-            },{
-                title: _('ms.warehouses')
-                ,items: [{
-                    html: '<p>'+_('ms.warehouses.intro_msg')+'</p><br />'
-                    ,border: false
-                },{
-                    xtype: 'minishop-grid-warehouses'
-                    ,preventRender: true
-                }]
-                ,listeners: {
-                    activate : function(panel){
-                        //Ext.getCmp('minishop-grid-warehouses').refresh();
-                    }
-                }
-            },{
-                title: _('ms.statuses')
-                ,items: [{
-                    html: '<p>'+_('ms.status.intro_msg')+'</p><br />'
-                    ,border: false
-                },{
-                    xtype: 'minishop-grid-statuses'
-                    ,preventRender: true
-                }]
-                ,listeners: {
-                    activate : function(panel){
-                        //Ext.getCmp('minishop-grid-statuses').refresh();
-                    }
-                }
             }]
-        }] */
+        }]
     });
     SEManager.panel.Home.superclass.constructor.call(this,config);
 };

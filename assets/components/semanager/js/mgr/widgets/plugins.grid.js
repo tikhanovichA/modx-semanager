@@ -1,20 +1,29 @@
 SEManager.grid.Plugins = function(config) {
     config = config || {};
+    this.exp = new Ext.grid.RowExpander({
+        tpl: new Ext.Template('<p>{description}</p>')
+    });
+
+    this.sm = new Ext.grid.CheckboxSelectionModel();
+
     Ext.applyIf(config,{
-        id: 'semanager-grid-plugins'
-        ,url: SEManager.config.connector_url
+        url: SEManager.config.connector_url
+        //,fields: ['id','source','name','description','category','locked','static','static_file']
+        ,fields: ['id','name','description','static','static_file']
+        ,id: 'semanager-grid-plugins'
+        ,paging: true
+        ,pageSize: MODx.config.default_per_page > 10 ? MODx.config.default_per_page : 10
+        ,remoteSort: true
+        ,sm: this.sm
+        ,plugins: [this.exp]
         ,baseParams: {
             action: 'mgr/plugins/getlist'
         }
         ,save_action: 'mgr/plugins/updatefromgrid'
-        ,autosave: true
-        ,autoHeight: true
-        ,paging: true
-        ,remoteSort: true
-        ,clicksToEdit: true
-        //,fields: ['id','source','name','description','category','locked','static','static_file']
-        ,fields: ['id','name','static','static_file']
-        ,columns: [{
+        //,autosave: true
+        //,autoHeight: true
+        ,clicksToEdit: 2
+        ,columns: [this.exp, this.sm, {
             header: _('id')
             ,dataIndex: 'id'
             ,width: 35

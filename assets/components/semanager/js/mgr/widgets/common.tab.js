@@ -19,23 +19,14 @@ SEManager.panel.CommonTab = function(config) {
                 msgTarget: 'under'
             }
             ,items: [{
-                xtype: 'combo-boolean'
-                ,name: 'acts2'
-                ,hiddenName: 'acts'
-                ,id: 'acts'
-                ,fieldLabel: 'setting update Services Enabled'
-                ,description: MODx.expandHelp ? '' : 'articles.setting.updateServicesEnabled_desc'
-                ,value: true
-                ,anchor: '40%'
-
-
-                //,listeners: oc
-            },{
-                xtype: MODx.expandHelp ? 'label' : 'hidden'
-                ,forId: 'acts'
-                ,html: 'articles setting updateServices Enabled_desc'
-                ,cls: 'desc-under'
-
+                xtype: 'button'
+                ,text: 'Sync All'
+                ,style: 'width: 200px;'
+                ,listeners: {
+                    click: function(){
+                        alert('fired!');
+                    }
+                }
             }]
         },{
             title: 'File Settings'

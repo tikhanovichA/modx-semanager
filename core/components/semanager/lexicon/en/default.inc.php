@@ -24,3 +24,5 @@
  **/
 $_lang['semanager'] = 'SE Manager';
 $_lang['semanager_desc'] = 'Manager for extra control of Static Elements';
+
+$_lang['semanager.no_permission'] = 'Not permission';

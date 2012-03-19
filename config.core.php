@@ -1,1 +1,1 @@
-/home/www/modx.by/config.core.php
+/home/alroniks/dev/revolution/config.core.php

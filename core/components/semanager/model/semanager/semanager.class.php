@@ -85,4 +85,61 @@ class SEManager
                 break;
         }
     }
+
+    /**
+     * Create directory with $name on the $path
+     *
+     * @access public
+     * @param $name
+     * @param $path
+     */
+
+    public function createDirectory($name, $path){
+
+    }
+
+    /**
+     * Make synchronization of all Elements
+     */
+    public function syncAll(){
+
+        $elements_dir = $this->modx->getOption('semanager.elements_dir', null, MODX_ASSETS_PATH . '/elements/');
+        if (!file_exists($elements_dir)){
+            mkdir($elements_dir);
+        }else{
+            echo 'no';
+        }
+
+        $d = opendir($elements_dir . '../');
+        while ( $entry = readdir($d) ){
+            print $entry;
+        }
+
+
+        // для начала хватит просто имена файлов посоздавать в куче по шаблонам
+        // сниппеты
+        //$modx->newQuery('modSnippet');
+        $c = $this->modx->getCollection('modSnippet', 1);
+
+        #print_r($c);
+
+        //$count = $modx->getCount('modSnippet',$c);
+
+
+        // 1. проверить, есть ли папка elements  в assets. если папки нет - создать
+        // 2. проверить настройку - использовать ли типы. если да, то создать папки нужные
+        // 3. проверить настройку - использовать категории - если да, то нужно предварительно для элемента создавать папки с категориями
+        // 4. для каждого типа элементов пройтись и сделать запись в файл содержимого с учетом путей
+        // если файла нет - пишем смело.
+        // если файл есть, но дата изменения элемента в базе новее, чем дата в файле - пишем в файл
+        // если файл свежее, то оставляем его как есть
+        // или другой способ - для записи в файл-из файла используем api modx, просто записываем элементу путь к статике и включаем флаг - статический.
+
+
+
+
+    }
+
+
+
 }

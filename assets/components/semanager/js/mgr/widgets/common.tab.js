@@ -10,7 +10,7 @@ SEManager.panel.CommonTab = function(config) {
         ,plain: true
         ,deferredRender: true
         ,anchor: '100%'
-        ,activeItem: 1
+        ,activeItem: 0
         //,cls: 'x-form-label-top'
         ,items: [{
             title: 'Actions'
@@ -21,10 +21,23 @@ SEManager.panel.CommonTab = function(config) {
             ,items: [{
                 xtype: 'button'
                 ,text: 'Sync All'
-                ,style: 'width: 200px;'
+                ,bodyStyle: 'width: 200px;'
                 ,listeners: {
                     click: function(){
-                        alert('fired!');
+                        Ext.Ajax.request({
+                            url: SEManager.config.connector_url
+                            ,success: function(response) {
+                                console.log(response.responseText);
+
+                            }
+                            ,failure: function(response) {
+                                console.log(response);
+                            }
+                            ,params: {
+                                action: '/mgr/common/syncall'
+                                ,root: '111111'
+                            }
+                        });
                     }
                 }
             }]

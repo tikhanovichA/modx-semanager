@@ -1,19 +1,22 @@
 SEManager.grid.Snippets = function(config) {
     config = config || {};
     Ext.applyIf(config,{
-        id: 'semanager-grid-snippets'
-        ,url: SEManager.config.connector_url
+        url: SEManager.config.connector_url
         ,baseParams: {
             action: 'mgr/snippets/getlist'
         }
         ,save_action: 'mgr/snippets/updatefromgrid'
-        ,autosave: true
-        ,autoHeight: true
-        ,paging: true
-        ,remoteSort: true
-        ,clicksToEdit: true
+        ,id: 'semanager-grid-snippets'
         //,fields: ['id','source','name','description','category','locked','static','static_file']
         ,fields: ['id','name','static','static_file']
+        ,paging: true
+        ,pageSize: MODx.config.default_per_page > 10 ? MODx.config.default_per_page : 10
+
+        ,autosave: true
+        ,autoHeight: true
+        ,remoteSort: true
+        ,clicksToEdit: 2
+
         ,columns: [{
             header: _('id')
             ,dataIndex: 'id'

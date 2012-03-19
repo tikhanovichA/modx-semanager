@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * SE Manager
  *
  * Copyright 2012 by Ivan Klimchuk <ivan@klimchuk.com>
@@ -19,10 +18,24 @@
  * Place, Suite 330, Boston, MA 02111-1307 USA
  *
  * @package semanager
- * @subpackage lexicon
- *
- **/
-$_lang['semanager'] = 'SE Manager';
-$_lang['semanager_desc'] = 'Модуль для расширенного контроля Статических Элементов';
+ * @subpackage processors
+ */
 
-$_lang['semanager.no_permission'] = 'Нет доступа';
+if (!isset($modx->semanager) || !is_object($modx->semanager)) {
+    $semanager = $modx->getService('semanager','SEManager',$modx->getOption('semanager.core_path',null,$modx->getOption('core_path').'components/semanager/').'model/semanager/', $scriptProperties);
+    if (!($semanager instanceof SEManager)) return '---';
+}
+
+if (!$modx->hasPermission('view')) {return $this->failure($modx->lexicon('semanager.no_permission'));}
+
+$rrr = $modx->getOption('root', $_REQUEST, '');
+
+$modx->semanager->syncAll();
+
+#if($rrr == ''){
+#    return $modx->error->failure('Пиздец!');
+#}
+
+#return $modx->error->success('Успешно!');
+
+return $this->success('Успешно!' . $rrr);

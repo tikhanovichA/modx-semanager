@@ -20,7 +20,7 @@ SEManager.panel.CommonTab = function(config) {
             }
             ,items: [{
                 xtype: 'button'
-                ,text: 'Sync All'
+                ,text: 'All to files'
                 ,bodyStyle: 'width: 200px;'
                 ,listeners: {
                     click: function(){
@@ -38,6 +38,15 @@ SEManager.panel.CommonTab = function(config) {
                                 ,root: '111111'
                             }
                         });
+                    }
+                }
+            },{
+                xtype: 'button'
+                ,text: 'All to DB'
+                ,bodyStyle: 'width: 200px'
+                ,listeners: {
+                    click: function() {
+                        console.log('cancel');
                     }
                 }
             }]

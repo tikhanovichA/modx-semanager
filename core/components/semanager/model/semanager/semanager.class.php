@@ -107,7 +107,7 @@ class SEManager
         $elements_dir = $this->modx->getOption('semanager.elements_dir', null, MODX_ASSETS_PATH . '/elements/');
 
         if (!file_exists($elements_dir)){
-            $this->makeDirs($elements_dir);
+            $this->_makeDirs($elements_dir);
         }
 
         // 2. проверить настройку - использовать ли типы. если да, то создать папки нужные
@@ -122,7 +122,7 @@ class SEManager
             );
 
             foreach($dirs as $dir){
-                $this->makeDirs($dir);
+                $this->_makeDirs($dir);
             }
         }
 
@@ -131,31 +131,62 @@ class SEManager
 
         if($use_categories){
 
-            $this->getCategories();
+            $categories_map = $this->getCategoriesMap();
 
-            #print_r($c);
+            // TODO: сделать условие или как-то разрулить момент, чтобы он при включенной настройке - разделение типов - клал папки внутрь этих типов.
+            // Ну и нужна видимо проверка на непустые
+            foreach($categories_map as $item){
+                //$this->_makeDirs($elements_dir .'/'. $item);
+            }
+
         }
 
 
+        // диверсия против чанков - все в статику
+//        $chunks = $this->modx->getCollection('modChunk');
+//        foreach($chunks as $chunk){
+//            if(!$chunk->isStatic()){
+//                $content = $chunk->getContent();
+//                $chunk->set('static_file', $elements_dir .'/chunks/' . $chunk->name);
+//                $chunk->set('static', true);
+//                $chunk->setFileContent($content);
+//
+//                $chunk->save();
+//            }else{
+//                $chunk->set('static', false);
+//                $chunk->save();
+//            }
+//            #print_r($chunk->isStatic());
+//            #print_r($chunk->get('static_file'));
+//            #echo '---';
+//        }
 
-        // вывод папку с элементами
-        //$d = opendir($elements_dir);
-        //while ( $entry = readdir($d) ){
-        //    print $entry;
-        //}
+        // диверсия против сниппета
+        $snippet = $this->modx->getObject('modSnippet', array('id' => 17));
+
+        $filename_tpl_snippet = $this->modx->getOption('semanager.filename_tpl_snippet', null, '{name}.sn.php');
+
+        $filename = $elements_dir . 'snippets/' . str_replace('{name}', $snippet->name, $filename_tpl_snippet);
+
+        touch($filename);
+
+        print_r($filename);
+
+        // получаем до сохранения в файл контент
+        $content = $snippet->getContent();
+
+        // говорим в какой файл класть сниппет
+        $snippet->set('static_file', $filename);
+        // говорим сниппету, что он теперь статичный
+        $snippet->set('static', true);
+        // кладем контент в файл, ранее сохраненный
+        $snippet->setFileContent($content);
+        // сохраняеи все.
+        $snippet->save();
 
 
-        // для начала хватит просто имена файлов посоздавать в куче по шаблонам
-        // сниппеты
-        //$modx->newQuery('modSnippet');
-        $c = $this->modx->getCollection('modSnippet', 1);
 
-        #print_r($c);
-
-        //$count = $modx->getCount('modSnippet',$c);
-
-
-
+        #print_r($snippet->static_file);
 
 
         // 4. для каждого типа элементов пройтись и сделать запись в файл содержимого с учетом путей
@@ -169,42 +200,53 @@ class SEManager
 
     }
 
-    public function getCategories($empty = false){
+    /**
+     * Рекурсивная функция, которая получает полные пути для вложенных категорий
+     *
+     * @param $id
+     * @param array $parents
+     * @param array $category_list
+     */
+    private function _findAllParents($id, array $parents, array $category_list){
 
+        $parents[] = $category_list[$id]['name'];
+
+        $parent = $category_list[$id]['parent'];
+
+        if($parent != 0){
+            $this->_findAllParents($parent, &$parents, $category_list);
+        }
+    }
+
+
+    /**
+     * Get all categories as map for filesistem
+     *
+     * @param bool $empty
+     * @return array
+     */
+    public function getCategoriesMap($empty = false){
+
+        // TODO: реализовать возможность определения пустая категория или нет.
         // get all categories
         $categories = $this->modx->getCollection('modCategory');
-        $clist = array();
+        $list = array();
         foreach($categories as $c){
-            $clist[] = array(
-                $c->id,
-                $c->parent,
-                $c->category
+            $list[$c->id] = array(
+                'parent'    => $c->parent,
+                'name'      => $c->category
             );
         }
 
-        $data = array();
+        $categories_map = array();
 
-        findAllParents($clist[2], &$data);
-
-        function findAllParents($element, array $parents){
-            $data[] = $element[2];
-
-            if($element[1] == 0){
-                return $data;
-            }else{
-                findAllParents();
-            }
+        foreach($list as $key => $value){
+            $array = array();
+            $this->_findAllParents($key, &$array, $list);
+            $categories_map[] = join('/',array_reverse($array));
         }
 
-        function buildCategoryRecursive($element, $tree){
-            if($element[1] == 0){ // is root element
-                $tree[$element[0]] = array(
-                    'name' => $element[3],
-                    'path' => 'ff'
-                );
-            }
-        }
-
+        return $categories_map;
     }
 
     /**
@@ -213,10 +255,10 @@ class SEManager
      * @param $strPath
      * @return bool
      */
-    protected function makeDirs($strPath){
+    private function _makeDirs($strPath){
         if (is_dir($strPath)) return true;
         $pStrPath = dirname($strPath);
-        if (!$this->makeDirs($pStrPath)) return false;
+        if (!$this->_makeDirs($pStrPath)) return false;
         return @mkdir($strPath);
     }
 

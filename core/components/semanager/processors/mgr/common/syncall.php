@@ -38,4 +38,4 @@ $modx->semanager->syncAll();
 
 #return $modx->error->success('Успешно!');
 
-return $this->success('Успешно!' . $rrr);
+#return $this->success('Успешно!' . $rrr);

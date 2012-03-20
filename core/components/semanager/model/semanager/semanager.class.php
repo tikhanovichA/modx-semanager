@@ -103,17 +103,46 @@ class SEManager
      */
     public function syncAll(){
 
+        // 1. проверить, есть ли папка elements  в assets. если папки нет - создать
         $elements_dir = $this->modx->getOption('semanager.elements_dir', null, MODX_ASSETS_PATH . '/elements/');
+
         if (!file_exists($elements_dir)){
-            mkdir($elements_dir);
-        }else{
-            echo 'no';
+            $this->makeDirs($elements_dir);
         }
 
-        $d = opendir($elements_dir . '../');
-        while ( $entry = readdir($d) ){
-            print $entry;
+        // 2. проверить настройку - использовать ли типы. если да, то создать папки нужные
+        $type_separation = $this->modx->getOption('semanager.type_separation', null, true);
+
+        if($type_separation){
+            $dirs = array(
+                $elements_dir . '/templates',
+                $elements_dir . '/chunks',
+                $elements_dir . '/snippets',
+                $elements_dir . '/plugins'
+            );
+
+            foreach($dirs as $dir){
+                $this->makeDirs($dir);
+            }
         }
+
+        // 3. проверить настройку - использовать категории - если да, то нужно предварительно для элемента создавать папки с категориями
+        $use_categories = $this->modx->getOption('semanager.use_categories', null, true);
+
+        if($use_categories){
+
+            $this->getCategories();
+
+            #print_r($c);
+        }
+
+
+
+        // вывод папку с элементами
+        //$d = opendir($elements_dir);
+        //while ( $entry = readdir($d) ){
+        //    print $entry;
+        //}
 
 
         // для начала хватит просто имена файлов посоздавать в куче по шаблонам
@@ -126,9 +155,9 @@ class SEManager
         //$count = $modx->getCount('modSnippet',$c);
 
 
-        // 1. проверить, есть ли папка elements  в assets. если папки нет - создать
-        // 2. проверить настройку - использовать ли типы. если да, то создать папки нужные
-        // 3. проверить настройку - использовать категории - если да, то нужно предварительно для элемента создавать папки с категориями
+
+
+
         // 4. для каждого типа элементов пройтись и сделать запись в файл содержимого с учетом путей
         // если файла нет - пишем смело.
         // если файл есть, но дата изменения элемента в базе новее, чем дата в файле - пишем в файл
@@ -138,6 +167,57 @@ class SEManager
 
 
 
+    }
+
+    public function getCategories($empty = false){
+
+        // get all categories
+        $categories = $this->modx->getCollection('modCategory');
+        $clist = array();
+        foreach($categories as $c){
+            $clist[] = array(
+                $c->id,
+                $c->parent,
+                $c->category
+            );
+        }
+
+        $data = array();
+
+        findAllParents($clist[2], &$data);
+
+        function findAllParents($element, array $parents){
+            $data[] = $element[2];
+
+            if($element[1] == 0){
+                return $data;
+            }else{
+                findAllParents();
+            }
+        }
+
+        function buildCategoryRecursive($element, $tree){
+            if($element[1] == 0){ // is root element
+                $tree[$element[0]] = array(
+                    'name' => $element[3],
+                    'path' => 'ff'
+                );
+            }
+        }
+
+    }
+
+    /**
+     * Recursive mkdir function
+     *
+     * @param $strPath
+     * @return bool
+     */
+    protected function makeDirs($strPath){
+        if (is_dir($strPath)) return true;
+        $pStrPath = dirname($strPath);
+        if (!$this->makeDirs($pStrPath)) return false;
+        return @mkdir($strPath);
     }
 
 

@@ -21,6 +21,12 @@
  */
 class SEManager
 {
+
+    /**
+     * @var string
+     */
+    public $elements_dir = '';
+
     /**
      * @param modX $modx
      * @param array $config
@@ -87,116 +93,127 @@ class SEManager
     }
 
     /**
-     * Create directory with $name on the $path
-     *
-     * @access public
-     * @param $name
-     * @param $path
-     */
-
-    public function createDirectory($name, $path){
-
-    }
-
-    /**
      * Make synchronization of all Elements
      */
     public function syncAll(){
 
         // 1. проверить, есть ли папка elements  в assets. если папки нет - создать
-        $elements_dir = $this->modx->getOption('semanager.elements_dir', null, MODX_ASSETS_PATH . '/elements/');
+        $this->elements_dir = $this->modx->getOption('semanager.elements_dir', null, MODX_ASSETS_PATH . '/elements/');
 
-        if (!file_exists($elements_dir)){
-            $this->_makeDirs($elements_dir);
+        if (!file_exists($this->elements_dir)){
+            $this->_makeDirs($this->elements_dir);
         }
 
         // 2. проверить настройку - использовать ли типы. если да, то создать папки нужные
         $type_separation = $this->modx->getOption('semanager.type_separation', null, true);
 
         if($type_separation){
+
             $dirs = array(
-                $elements_dir . '/templates',
-                $elements_dir . '/chunks',
-                $elements_dir . '/snippets',
-                $elements_dir . '/plugins'
+                'modTemplate' => $this->elements_dir . 'templates/',
+                'modChunk'    => $this->elements_dir . 'chunks/',
+                'modSnippet'  => $this->elements_dir . 'snippets/',
+                'modPlugin'   => $this->elements_dir . 'plugins/'
             );
 
-            foreach($dirs as $dir){
+            foreach($dirs as $type => $dir){
                 $this->_makeDirs($dir);
+                $this->manyElementsToStatic($type, $dir);
             }
+
+        }else{
+
+            $types = array(
+                'modTemplate',
+                'modChunk',
+                'modSnippet',
+                'modPlugin'
+            );
+
+            foreach($types as $type){
+                $this->manyElementsToStatic($type);
+            }
+
         }
 
-        // 3. проверить настройку - использовать категории - если да, то нужно предварительно для элемента создавать папки с категориями
+        // диверсия против сниппета
+        $snippet = $this->modx->getObject('modSnippet', array('id' => 7));
+
+        $filename_tpl_snippet = $this->modx->getOption('semanager.filename_tpl_snippet', null, '{name}.sn.php');
+
+        $filename = $this->elements_dir . 'snippets/' . str_replace('{name}', $snippet->name, $filename_tpl_snippet);
+
+        //touch($filename);
+
+        $cmap = $this->getCategoriesMap($snippet->category);
+
+
+    }
+
+    public function oneElementToStatic($element, $path){
+
         $use_categories = $this->modx->getOption('semanager.use_categories', null, true);
 
         if($use_categories){
 
-            $categories_map = $this->getCategoriesMap();
+            $categories_map = $this->getCategoriesMap($element->category);
 
-            // TODO: сделать условие или как-то разрулить момент, чтобы он при включенной настройке - разделение типов - клал папки внутрь этих типов.
-            // Ну и нужна видимо проверка на непустые
-            foreach($categories_map as $item){
-                //$this->_makeDirs($elements_dir .'/'. $item);
+            if($categories_map != ''){
+
+                $path = $path . $categories_map . '/';
+                $this->_makeDirs($path);
+
             }
 
         }
 
+        // TODO: отрефакторить. учесть все возможные БД
+        $element_class = str_replace(array('_mysql','_sqlsrv'), '', get_class($element));
 
-        // диверсия против чанков - все в статику
-//        $chunks = $this->modx->getCollection('modChunk');
-//        foreach($chunks as $chunk){
-//            if(!$chunk->isStatic()){
-//                $content = $chunk->getContent();
-//                $chunk->set('static_file', $elements_dir .'/chunks/' . $chunk->name);
-//                $chunk->set('static', true);
-//                $chunk->setFileContent($content);
-//
-//                $chunk->save();
-//            }else{
-//                $chunk->set('static', false);
-//                $chunk->save();
-//            }
-//            #print_r($chunk->isStatic());
-//            #print_r($chunk->get('static_file'));
-//            #echo '---';
-//        }
+        $type = strtolower(str_replace('mod', '', $element_class));
 
-        // диверсия против сниппета
-        $snippet = $this->modx->getObject('modSnippet', array('id' => 17));
+        $types = array(
+            'template'  => 'tp.html',
+            'plugin'    => 'pl.php',
+            'snippet'   => 'sn.php',
+            'chunks'    => 'ch.html'
+        );
 
-        $filename_tpl_snippet = $this->modx->getOption('semanager.filename_tpl_snippet', null, '{name}.sn.php');
+        $filename_tpl = $this->modx->getOption('semanager.filename_tpl_' . $type, null, '{name}.'.$types[$type]);
 
-        $filename = $elements_dir . 'snippets/' . str_replace('{name}', $snippet->name, $filename_tpl_snippet);
+        // fix name notice for templates
+        if($element_class == 'modTemplate'){
+            $element->name = $element->templatename;
+        }
 
-        touch($filename);
+        $file_path = $path . str_replace('{name}', $element->name, $filename_tpl);
 
-        print_r($filename);
+        touch($file_path);
 
-        // получаем до сохранения в файл контент
-        $content = $snippet->getContent();
+        $content = $element->getContent();
+        $element->set('static_file', $file_path);
+        $element->set('static', true);
+        $element->setFileContent($content);
 
-        // говорим в какой файл класть сниппет
-        $snippet->set('static_file', $filename);
-        // говорим сниппету, что он теперь статичный
-        $snippet->set('static', true);
-        // кладем контент в файл, ранее сохраненный
-        $snippet->setFileContent($content);
-        // сохраняеи все.
-        $snippet->save();
+        if($element->save()){
+            return true;
+        }
 
+    }
 
+    public function manyElementsToStatic($class_name, $path = ''){
 
-        #print_r($snippet->static_file);
+        if($path == ''){
+            $path = $this->elements_dir;
+        }
 
+        $elements = $this->modx->getCollection($class_name);
 
-        // 4. для каждого типа элементов пройтись и сделать запись в файл содержимого с учетом путей
-        // если файла нет - пишем смело.
-        // если файл есть, но дата изменения элемента в базе новее, чем дата в файле - пишем в файл
-        // если файл свежее, то оставляем его как есть
-        // или другой способ - для записи в файл-из файла используем api modx, просто записываем элементу путь к статике и включаем флаг - статический.
+        foreach($elements as $element){
 
+            $this->oneElementToStatic($element, $path);
 
-
+        }
 
     }
 
@@ -218,16 +235,17 @@ class SEManager
         }
     }
 
-
     /**
      * Get all categories as map for filesistem
-     *
-     * @param bool $empty
-     * @return array
+     * @param $id_category
+     * @return string
      */
-    public function getCategoriesMap($empty = false){
+    public function getCategoriesMap($id_category){
 
-        // TODO: реализовать возможность определения пустая категория или нет.
+        if($id_category == 0){
+            return '';
+        }
+
         // get all categories
         $categories = $this->modx->getCollection('modCategory');
         $list = array();
@@ -238,15 +256,12 @@ class SEManager
             );
         }
 
-        $categories_map = array();
+        $map = array();
+        $this->_findAllParents($id_category, &$map, $list);
 
-        foreach($list as $key => $value){
-            $array = array();
-            $this->_findAllParents($key, &$array, $list);
-            $categories_map[] = join('/',array_reverse($array));
-        }
+        $map_to_path = join('/',array_reverse($map));
 
-        return $categories_map;
+        return $map_to_path;
     }
 
     /**

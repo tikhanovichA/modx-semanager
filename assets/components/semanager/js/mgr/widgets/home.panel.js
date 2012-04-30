@@ -5,7 +5,7 @@ SEManager.panel.Home = function(config) {
         ,baseCls: 'modx-formpanel'
         ,cls: 'container'
         ,items: [{
-            html: '<h2>SE Manager</h2>'
+            html: '<h2>' + _('semanager.title') + '</h2>'
             ,border: false
             ,cls: 'modx-page-header'
         },{
@@ -23,16 +23,16 @@ SEManager.panel.Home = function(config) {
                 return { activeTab:this.items.indexOf(this.getActiveTab()) };
             }
             ,items: [{
-                title: 'Common'
+                title: _('semanager.common_settings')
                 ,id: 'semanager-tab-common'
                 ,items: [{
                     xtype: "semanager-tab-common"
                 }]
             },{
-                title: 'Snippets'
+                title: _('snippets')
                 ,xtype: 'semanager-tab-snippets'
             },{
-                title: 'Chunks'
+                title: _('chunks')
                 ,items: [{
                     html: '<p>'+_('chunks')+'</p>'
                     ,border: false

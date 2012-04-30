@@ -57,7 +57,9 @@ class SEManager
         ),$config);
 
         if ($this->modx->lexicon) {
-            $this->modx->lexicon->load('semanager:default');
+            //$this->modx->lexicon->load('core:element');
+            //$this->modx->lexicon->load('semanager:default');
+
         }
 
         // Вывод ошибок debug only

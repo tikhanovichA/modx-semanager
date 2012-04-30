@@ -22,7 +22,11 @@
  * @subpackage lexicon
  *
  **/
-$_lang['semanager'] = 'SE Manager';
-$_lang['semanager_desc'] = 'Manager for extra control of Static Elements';
+$_lang['semanager.title'] = 'SE Manager';
+$_lang['semanager.description'] = 'Manager for extra control of Static Elements';
+
+$_lang['semanager.common_settings'] = "Common settings";
+
+
 
 $_lang['semanager.no_permission'] = 'Not permission';

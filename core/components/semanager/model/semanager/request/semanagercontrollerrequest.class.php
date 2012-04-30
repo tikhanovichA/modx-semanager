@@ -67,6 +67,8 @@ class SEManagerControllerRequest extends modRequest {
 
         $f = $semanager->config['corePath'].'controllers/mgr/'.$this->action.'.php';
 
+        $modx->lexicon->load("semanager:default");
+
         if (file_exists($f)) {
             $viewOutput = include $f;
         } else {

@@ -22,7 +22,9 @@
  * @subpackage lexicon
  *
  **/
-$_lang['semanager'] = 'SE Manager';
-$_lang['semanager_desc'] = 'Модуль для расширенного контроля Статических Элементов';
+$_lang['semanager.title'] = 'SE Manager';
+$_lang['semanager_desciption'] = 'Модуль для расширенного контроля Статических Элементов';
+
+$_lang['semanager.common_settings'] = "Общие настройки";
 
 $_lang['semanager.no_permission'] = 'Нет доступа';

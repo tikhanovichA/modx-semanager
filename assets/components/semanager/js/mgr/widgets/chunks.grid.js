@@ -24,7 +24,7 @@ SEManager.grid.Chunks = function(config) {
             ,dataIndex: 'name'
             ,sortable: true
         },{
-            header: _('static')
+            header: _('is_static')
             ,dataIndex: 'static'
             ,width: 100
             ,sortable: true

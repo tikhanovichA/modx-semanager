@@ -27,12 +27,14 @@ require_once MODX_CONNECTORS_PATH.'index.php';
 
 $corePath = $modx->getOption('semanager.core_path',null,$modx->getOption('core_path').'components/semanager/');
 require_once $corePath.'model/semanager/semanager.class.php';
-$modx->semanager = new SEManager($modx);
+//$modx->semanager = new SEManager($modx);
+$semanager = new SEManager($modx);
 
-$modx->lexicon->load('semanager:default');
+$modx->lexicon->load('semanager');
 
 /* handle request */
-$path = $modx->getOption('processorsPath',$modx->semanager->config,$corePath.'processors/');
+//$path = $modx->getOption('processorsPath',$modx->semanager->config,$corePath.'processors/');
+$path = $modx->getOption('processorsPath',$semanager->config,$corePath.'processors/');
 $modx->request->handleRequest(array(
     'processors_path' => $path,
     'location' => '',

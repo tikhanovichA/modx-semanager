@@ -21,6 +21,10 @@
  * @subpackage controllers
  */
 require_once dirname(dirname(__FILE__)).'/model/semanager/semanager.class.php';
+
 $semanager = new SEManager($modx);
+
+
+
 return $semanager->initialize("mgr");
 

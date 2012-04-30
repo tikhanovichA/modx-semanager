@@ -33,12 +33,12 @@ SEManager.grid.Plugins = function(config) {
             ,dataIndex: 'name'
             ,sortable: true
         },{
-            header: 'is_static'
+            header: _('is_static')
             ,dataIndex: 'static'
             ,width: 100
             ,sortable: true
         },{
-            header: 'path_to_file'
+            header: _('static_file')
             ,dataIndex: 'static_file'
         }]
         ,listeners: {

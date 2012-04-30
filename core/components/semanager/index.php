@@ -20,4 +20,7 @@
  * @package semanager
  */
 $o = include dirname(__FILE__).'/controllers/index.php';
+
+$modx->lexicon->load("semanager:default");
+
 return $o;

@@ -29,8 +29,11 @@ require_once MODX_CORE_PATH . 'model/modx/modrequest.class.php';
  * @extends modRequest
  */
 class SEManagerControllerRequest extends modRequest {
+
     public $semanager = null;
+
     public $actionVar = 'action';
+
     public $defaultAction = 'home';
 
     function __construct(SEManager &$semanager) {
@@ -45,6 +48,7 @@ class SEManagerControllerRequest extends modRequest {
      * {@inheritdoc}
      */
     public function handleRequest() {
+
         $this->loadErrorHandler();
 
         /* save page to manager object. allow custom actionVar choice for extending classes. */
@@ -66,6 +70,9 @@ class SEManagerControllerRequest extends modRequest {
         $viewHeader = include $semanager->config['corePath'].'controllers/mgr/header.php';
 
         $f = $semanager->config['corePath'].'controllers/mgr/'.$this->action.'.php';
+
+        print_r($f);
+        die();
 
         $modx->lexicon->load("semanager:default");
 

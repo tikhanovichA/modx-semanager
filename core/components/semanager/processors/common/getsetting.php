@@ -18,9 +18,25 @@
  * Place, Suite 330, Boston, MA 02111-1307 USA
  *
  * @package semanager
+ * @subpackage processors
  */
-$o = include dirname(__FILE__).'/controllers/index.php';
 
-$modx->lexicon->load("semanager:default");
+if (!isset($modx->semanager) || !is_object($modx->semanager)) {
+    $semanager = $modx->getService('semanager','SEManager',$modx->getOption('semanager.core_path',null,$modx->getOption('core_path').'components/semanager/').'model/semanager/', $scriptProperties);
+    if (!($semanager instanceof SEManager)) return '---';
+}
 
-return $o;
+if (!$modx->hasPermission('view')) {return $this->failure($modx->lexicon('semanager.no_permission'));}
+
+$settings_name = $modx->getOption('settings_name', $_REQUEST, '');
+
+if($settings_name != ''){
+
+    $full_settings_name = 'semanager.' . $settings_name;
+    $default = array_key_exists($settings_name, $modx->semanager->config)? $modx->semanager->config[$settings_name] : '';
+
+    $value = $modx->getOption($full_settings_name, null, $default);
+
+    return $value;
+
+}

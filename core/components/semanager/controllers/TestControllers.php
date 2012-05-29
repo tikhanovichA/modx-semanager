@@ -21,15 +21,19 @@
  * @subpackage controllers
  */
 
-$modx->regClientStartupScript($semanager->config['jsUrl'].'mgr/semanager.js');
-$modx->regClientStartupHTMLBlock('
-    <script>
-        Ext.onReady(function() {
-            SEManager.config = '.$modx->toJSON($semanager->config).';
-            SEManager.config.connector_url = "'.$semanager->config['connectorUrl'].'";
-            SEManager.config.connectors_url = "'.$semanager->config['connectorsUrl'].'";
-            SEManager.action = "'.(!empty($_REQUEST['a']) ? $_REQUEST['a'] : 0).'";
-        });
-    </script>');
-return '';
+class SEManagerTestManagerController extends SEManagerManagerController {
+
+    public function process(array $scriptProperties = array()){
+
+    }
+
+    public function getPageTitle() {
+        return $this->modx->lexicon('semanager');
+    }
+
+    public function getTemplateFile() {
+        return $this->semanager->config['templatesPath'].'test.tpl';
+    }
+
+}
 

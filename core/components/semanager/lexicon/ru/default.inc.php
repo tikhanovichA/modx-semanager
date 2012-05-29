@@ -22,9 +22,35 @@
  * @subpackage lexicon
  *
  **/
-$_lang['semanager.title'] = 'SE Manager';
-$_lang['semanager_desciption'] = 'Модуль для расширенного контроля Статических Элементов';
+$_lang['semanager.title'] = 'SE Управленец';
+$_lang['semanager.description'] = 'Модуль для расширенного контроля статических элементов';
 
 $_lang['semanager.common_settings'] = "Общие настройки";
+
+$_lang['semanager.common.actions'] = "Действия";
+
+$_lang['semanager.common.actions.alltofiles'] = "Все в файлы";
+$_lang['semanager.common.actions.alltodb'] = "Все в базу данных";
+$_lang['semanager.common.actions.fromfiles'] = "Загрузить из файлов";
+
+$_lang['semanager.common.file_settings'] = "Настройки файлов";
+
+$_lang['semanager.common.fs.elements_dir'] = "Каталог с элементами";
+$_lang['semanager.common.fs.elements_dir_desc'] = "Папка, куда компонент складывает все элементы";
+
+$_lang['semanager.common.fs.filename_tpl_chunk'] = "Имя файла чанка";
+$_lang['semanager.common.fs.filename_tpl_chunk_desc'] = "Шаблон для имен файл чанков, где {name} заменяется на имя элемента.";
+
+$_lang['semanager.common.fs.filename_tpl_plugin'] = "Имя файла плагина";
+$_lang['semanager.common.fs.filename_tpl_plugin_desc'] = "Шаблон для имен файл плагинов, где {name} заменяется на имя элемента.";
+
+$_lang['semanager.common.fs.filename_tpl_snippet'] = "Имя файла сниппета";
+$_lang['semanager.common.fs.filename_tpl_snippet_desc'] = "Шаблон для имен файл сниппетов, где {name} заменяется на имя элемента.";
+
+$_lang['semanager.common.fs.filename_tpl_template'] = "Имя файла шаблона";
+$_lang['semanager.common.fs.filename_tpl_template_desc'] = "Шаблон для имен файл шаблонов, где {name} заменяется на имя элемента.";
+
+$_lang['semanager.common.other_settings'] = "Другие настройки";
+
 
 $_lang['semanager.no_permission'] = 'Нет доступа';

@@ -1,12 +1,12 @@
 SEManager.grid.Chunks = function(config) {
     config = config || {};
     Ext.applyIf(config,{
-        id: 'semanager-grid-chunks'
+         id: 'semanager-grid-chunks'
         ,url: SEManager.config.connector_url
         ,baseParams: {
-            action: 'mgr/chunks/getlist'
+            action: 'chunks/getlist'
         }
-        ,save_action: 'mgr/chunks/updatefromgrid'
+        ,save_action: 'chunks/updatefromgrid'
         ,autosave: true
         ,autoHeight: true
         ,paging: true

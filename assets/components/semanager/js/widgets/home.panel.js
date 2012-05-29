@@ -1,7 +1,7 @@
 SEManager.panel.Home = function(config) {
     config = config || {};
     Ext.apply(config,{
-        border: false
+         border: false
         ,baseCls: 'modx-formpanel'
         ,cls: 'container'
         ,items: [{
@@ -23,14 +23,25 @@ SEManager.panel.Home = function(config) {
                 return { activeTab:this.items.indexOf(this.getActiveTab()) };
             }
             ,items: [{
-                title: _('semanager.common_settings')
+                 title: _('semanager.common_settings')
                 ,id: 'semanager-tab-common'
                 ,items: [{
                     xtype: "semanager-tab-common"
                 }]
             },{
                 title: _('snippets')
-                ,xtype: 'semanager-tab-snippets'
+                ,items: [{
+                    html: '<p>' + _('snippets') + '</p>'
+                    ,border: false
+                    ,bodyCssClass: 'panel-desc'
+                },{
+                    xtype: 'semanager-grid-snippets'
+                    ,preventRender: true
+                    ,cls: 'main-wrapper'
+                }]
+                ,listeners: {
+
+                }
             },{
                 title: _('chunks')
                 ,items: [{

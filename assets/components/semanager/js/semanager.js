@@ -3,8 +3,8 @@ var SEManager = function(config) {
     SEManager.superclass.constructor.call(this,config);
 };
 Ext.extend(SEManager,Ext.Component,{
-    page:{},window:{},grid:{},form:{},tree:{},panel:{},combo:{},config: {},view: {}
+    page:{},window:{},grid:{},form:{},tree:{},panel:{},combo:{},config:{},view:{}
 });
 Ext.reg('SEManager',SEManager);
 
-SEManager = new SEManager();
+var SEManager = new SEManager();

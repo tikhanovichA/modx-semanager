@@ -19,52 +19,81 @@
  *
  * @package semanager
  */
-class SEManager
-{
-
+class SEManager {
     /**
      * @var string
      */
     public $elements_dir = '';
 
+    public $modx = null;
+
+    public $config = array();
+
     /**
      * @param modX $modx
      * @param array $config
      */
-    function __construct(modX &$modx, array $config=array()){
+    function __construct(modX &$modx, array $config=array()) {
         $this->modx =& $modx;
 
-        $corePath = $this->modx->getOption('semanager.core_path',$config,$this->modx->getOption('core_path').'components/semanager/');
-        $assetsUrl = $this->modx->getOption('semanager.assets_url',$config,$this->modx->getOption('assets_url').'components/semanager/');
-        $connectorUrl = $assetsUrl.'connector.php';
-        $connectorsUrl = $assetsUrl.'connectors/';
+        $corePath = $this->modx->getOption('semanager.core_path', null, $this->modx->getOption('core_path').'components/semanager/');
+        $assetsPath = $this->modx->getOption('semanager.assets_path', null, $this->modx->getOption('assets_path').'components/semanager/');
+        $assetsUrl = $this->modx->getOption('semanager.assets_url', null, $this->modx->getOption('assets_url').'components/semanager/');
 
         $this->config = array_merge(array(
-            'assetsUrl' => $assetsUrl,
-            'cssUrl' => $assetsUrl.'css/',
-            'jsUrl' => $assetsUrl.'js/',
-            'imagesUrl' => $assetsUrl.'img/',
-
-            'connectorUrl' => $connectorUrl,
-            'connectorsUrl' => $connectorsUrl,
-
             'corePath' => $corePath,
             'modelPath' => $corePath.'model/',
-            'chunksPath' => $corePath.'elements/chunks/',
-            'chunkSuffix' => '.chunk.tpl',
-            'snippetsPath' => $corePath.'elements/snippets/',
             'processorsPath' => $corePath.'processors/',
+            'controllersPath' => $corePath.'controllers/',
+            'templatesPath' => $corePath.'templates/',
+            // chunks and snippets
+
+            'baseUrl' => $assetsUrl,
+            'cssUrl' => $assetsUrl.'css/',
+            'jsUrl' => $assetsUrl.'js/',
+            'imgUrl' => $assetsUrl.'img/',
+            'connectorUrl' => $assetsUrl.'connector.php',
+
+            'elements_dir' => $this->elements_dir = $this->modx->getOption('semanager.elements_dir', null, MODX_ASSETS_PATH.'/elements/'),
+            'filename_tpl_chunk' => $this->elements_dir = $this->modx->getOption('semanager.filename_tpl_chunk', null, '{name}.ch.html'),
+            'filename_tpl_plugin' => $this->elements_dir = $this->modx->getOption('semanager.filename_tpl_plugin', null, '{name}.pl.php'),
+            'filename_tpl_snippet' => $this->elements_dir = $this->modx->getOption('semanager.filename_tpl_snippet', null, '{name}.sn.php'),
+            'filename_tpl_template' => $this->elements_dir = $this->modx->getOption('semanager.filename_tpl_template', null, '{name}.tp.html'),
+
+            'default_filenames' => array(
+                'template'  => 'tp.html',
+                'plugin'    => 'pl.php',
+                'snippet'   => 'sn.php',
+                'chunks'    => 'ch.html'),
         ),$config);
 
-        if ($this->modx->lexicon) {
-            //$this->modx->lexicon->load('core:element');
-            //$this->modx->lexicon->load('semanager:default');
+        $this->modx->addPackage('semanager', $this->config['modelPath']);
 
+        if ($this->modx->lexicon) {
+            $this->modx->lexicon->load('semanager:default');
         }
 
-        // Вывод ошибок debug only
-        ini_set('display_errors', 1);
-        error_reporting(E_ALL);
+        $this->initDebug();
+    }
+
+    /**
+     * Load debugging settings
+     */
+    public function initDebug() {
+        if ($this->modx->getOption('debug',$this->config,false)) {
+            error_reporting(E_ALL); ini_set('display_errors',true);
+            $this->modx->setLogTarget('HTML');
+            $this->modx->setLogLevel(modX::LOG_LEVEL_ERROR);
+
+            $debugUser = $this->config['debugUser'] == '' ? $this->modx->user->get('username') : 'anonymous';
+            $user = $this->modx->getObject('modUser',array('username' => $debugUser));
+            if ($user == null) {
+                $this->modx->user->set('id',$this->modx->getOption('debugUserId',$this->config,1));
+                $this->modx->user->set('username',$debugUser);
+            } else {
+                $this->modx->user = $user;
+            }
+        }
     }
 
     /**
@@ -73,25 +102,18 @@ class SEManager
      * @access public
      * @param string $ctx The context to load. Defaults to web.
      */
-    public function initialize($ctx="web"){
+    public function initialize($ctx="mgr"){
+        $output = '';
         switch($ctx){
             case "mgr":
-
                 if (!$this->modx->loadClass('semanager.request.SEManagerControllerRequest',$this->config['modelPath'],true,true)) {
                     return 'Could not load controller request handler.';
                 }
                 $this->request = new SEManagerControllerRequest($this);
-
-                return $this->request->handleRequest();
-
-                break;
-            case "web":
-                return '';
-                break;
-            default:
-                return '';
-                break;
+                $output = $this->request->handleRequest();
+            break;
         }
+        return $output;
     }
 
     /**
@@ -99,8 +121,8 @@ class SEManager
      */
     public function syncAll(){
 
-        // 1. проверить, есть ли папка elements  в assets. если папки нет - создать
-        $this->elements_dir = $this->modx->getOption('semanager.elements_dir', null, MODX_ASSETS_PATH . '/elements/');
+        // TODO: перейти на переменную в config
+        $this->elements_dir = $this->config['elements_dir'];
 
         if (!file_exists($this->elements_dir)){
             $this->_makeDirs($this->elements_dir);
@@ -138,18 +160,6 @@ class SEManager
 
         }
 
-        // диверсия против сниппета
-        $snippet = $this->modx->getObject('modSnippet', array('id' => 7));
-
-        $filename_tpl_snippet = $this->modx->getOption('semanager.filename_tpl_snippet', null, '{name}.sn.php');
-
-        $filename = $this->elements_dir . 'snippets/' . str_replace('{name}', $snippet->name, $filename_tpl_snippet);
-
-        //touch($filename);
-
-        $cmap = $this->getCategoriesMap($snippet->category);
-
-
     }
 
     public function oneElementToStatic($element, $path){
@@ -174,16 +184,8 @@ class SEManager
 
         $type = strtolower(str_replace('mod', '', $element_class));
 
-        $types = array(
-            'template'  => 'tp.html',
-            'plugin'    => 'pl.php',
-            'snippet'   => 'sn.php',
-            'chunks'    => 'ch.html'
-        );
+        $filename_tpl = $this->modx->getOption('semanager.filename_tpl_' . $type, null, '{name}.'.$this->config['default_filenames'][$type]);
 
-        $filename_tpl = $this->modx->getOption('semanager.filename_tpl_' . $type, null, '{name}.'.$types[$type]);
-
-        // fix name notice for templates
         if($element_class == 'modTemplate'){
             $element->name = $element->templatename;
         }

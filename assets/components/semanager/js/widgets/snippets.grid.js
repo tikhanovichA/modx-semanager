@@ -1,22 +1,19 @@
 SEManager.grid.Snippets = function(config) {
     config = config || {};
     Ext.applyIf(config,{
-        url: SEManager.config.connector_url
+         id: 'semanager-grid-snippets'
+        ,url: SEManager.config.connector_url
         ,baseParams: {
-            action: 'mgr/snippets/getlist'
+            action: 'snippets/getlist'
         }
-        ,save_action: 'mgr/snippets/updatefromgrid'
-        ,id: 'semanager-grid-snippets'
-        //,fields: ['id','source','name','description','category','locked','static','static_file']
-        ,fields: ['id','name','static','static_file']
-        ,paging: true
-        ,pageSize: MODx.config.default_per_page > 10 ? MODx.config.default_per_page : 10
-
+        ,save_action: 'snippets/updatefromgrid'
         ,autosave: true
         ,autoHeight: true
+        ,paging: true
         ,remoteSort: true
-        ,clicksToEdit: 2
-
+        ,clicksToEdit: true
+        //,fields: ['id','source','name','description','category','locked','static','static_file']
+        ,fields: ['id','name','static','static_file']
         ,columns: [{
             header: _('id')
             ,dataIndex: 'id'
@@ -27,7 +24,7 @@ SEManager.grid.Snippets = function(config) {
             ,dataIndex: 'name'
             ,sortable: true
         },{
-            header: _('static')
+            header: _('is_static')
             ,dataIndex: 'static'
             ,width: 100
             ,sortable: true

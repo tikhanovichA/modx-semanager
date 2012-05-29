@@ -18,13 +18,18 @@
  * Place, Suite 330, Boston, MA 02111-1307 USA
  *
  * @package semanager
+ */
+
+
+require_once dirname(__FILE__) . '/model/semanager/semanager.class.php';
+require_once dirname(__FILE__) . '/controllers/MainController.class.php';
+
+/**
+ * @package semanager
  * @subpackage controllers
  */
-require_once dirname(dirname(__FILE__)).'/model/semanager/semanager.class.php';
-
-$semanager = new SEManager($modx);
-
-
-
-return $semanager->initialize("mgr");
-
+class HomeManagerController extends SEManagerManagerController {
+    public static function getDefaultController() {
+        return 'HomeController';
+    }
+}

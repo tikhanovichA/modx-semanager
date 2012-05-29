@@ -17,9 +17,9 @@ SEManager.grid.Plugins = function(config) {
         ,sm: this.sm
         ,plugins: [this.exp]
         ,baseParams: {
-            action: 'mgr/plugins/getlist'
+            action: 'plugins/getlist'
         }
-        ,save_action: 'mgr/plugins/updatefromgrid'
+        ,save_action: 'plugins/updatefromgrid'
         //,autosave: true
         //,autoHeight: true
         ,clicksToEdit: 2

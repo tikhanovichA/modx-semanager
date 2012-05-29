@@ -15,7 +15,7 @@ set_time_limit(0);
 define('PKG_NAME','SE Manager');
 define('PKG_NAME_LOWER', 'semanager');
 define('PKG_VERSION','0.1.0');
-define('PKG_RELEASE','dev4');
+define('PKG_RELEASE','dev6');
 
 $root = dirname(dirname(__FILE__)) . '/';
 $sources= array (

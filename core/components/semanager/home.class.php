@@ -20,7 +20,6 @@
  * @package semanager
  */
 
-
 require_once dirname(__FILE__) . '/model/semanager/semanager.class.php';
 require_once dirname(__FILE__) . '/controllers/MainController.class.php';
 

@@ -29,61 +29,60 @@ SEManager.panel.Home = function(config) {
                     xtype: "semanager-tab-common"
                 }]
             },{
-                title: _('snippets')
-                ,items: [{
-                    html: '<p>' + _('snippets') + '</p>'
-                    ,border: false
-                    ,bodyCssClass: 'panel-desc'
-                },{
-                    xtype: 'semanager-grid-snippets'
-                    ,preventRender: true
-                    ,cls: 'main-wrapper'
-                }]
-                ,listeners: {
-
-                }
-            },{
                 title: _('chunks')
+                ,layout: 'form'
                 ,items: [{
                     html: '<p>'+_('chunks')+'</p>'
                     ,border: false
                     ,bodyCssClass: 'panel-desc'
                 },{
-                    xtype: 'semanager-grid-chunks'
-                    ,preventRender: true
+                    xtype: 'semanager-grid-elements-chunks'
+                    ,preventSaveRefresh: true
                     ,cls: 'main-wrapper'
+                    ,type: 'chunk'
                 }]
-                ,listeners: {
-
-                }
-            },{
-                title: _('templates')
-                ,items: [{
-                    html: '<p>'+_('templates')+'</p>'
-                    ,border: false
-                    ,bodyCssClass: 'panel-desc'
-                },{
-                    xtype: 'semanager-grid-templates'
-                    ,preventRender: true
-                    ,cls: 'main-wrapper'
-                }]
-                ,listeners: {
-
-                }
             },{
                 title: _('plugins')
+                ,layout: 'form'
                 ,items: [{
                     html: '<p>'+_('plugins')+'</p>'
                     ,border: false
                     ,bodyCssClass: 'panel-desc'
                 },{
-                    xtype: 'semanager-grid-plugins'
-                    ,preventRender: true
+                    xtype: 'semanager-grid-elements-plugins'
+                    ,preventSaveRefresh: true
                     ,cls: 'main-wrapper'
+                    ,type: 'plugin'
                 }]
-                ,listeners: {
-
-                }
+            },{
+                title: _('snippets')
+                ,layout: 'form'
+                ,items: [{
+                    html: '<p>' + _('snippets') + '</p>'
+                    ,border: false
+                    ,bodyCssClass: 'panel-desc'
+                },{
+                    xtype: 'semanager-grid-elements-snippets'
+                    ,preventSaveRefresh: true
+                    ,cls: 'main-wrapper'
+                    ,type: 'snippet'
+                }]
+            },{
+                title: _('templates')
+                ,layout: 'form'
+                ,items: [{
+                    html: '<p>'+_('templates')+'</p>'
+                    ,border: false
+                    ,bodyCssClass: 'panel-desc'
+                },{
+                    xtype: 'semanager-grid-elements-templates'
+                    ,preventSaveRefresh: true
+                    ,cls: 'main-wrapper'
+                    ,type: 'template'
+                }]
+            },{
+                title: 'Git'
+                ,disabled: true
             }]
         }]
     });
@@ -94,13 +93,35 @@ Ext.reg('semanager-panel-home',SEManager.panel.Home);
 
 
 
+// TODO: сделать подключаемым отдельным файлом
+// Комбобокс выбора категории
+SEManager.combo.Category = function(config) {
+    config = config || {};
+    Ext.applyIf(config,{
+        name: 'category'
+        ,hiddenName: 'category'
+        ,displayField: 'category'
+        ,valueField: 'category'
+        ,fields: ['id','category']
+        ,pageSize: 2
+        ,emptyText: 'Фильтр по категории'
+        ,width: 250
+        ,url: SEManager.config.connectorUrl
+        ,baseParams: {
+            action: 'chunks/getcategorylist'
+        }
+    });
+    SEManager.combo.Category.superclass.constructor.call(this,config);
+};
+Ext.extend(SEManager.combo.Category,MODx.combo.ComboBox);
+Ext.reg('semanager-combo-category',SEManager.combo.Category);
 
 
 
 
 
 
-
+                            /*
 
 
 // Комбобоксы статусов, складов и категорий товаров
@@ -232,3 +253,4 @@ MODx.form.FilterClear = function(config) {
 Ext.extend(MODx.form.FilterClear,Ext.Button);
 Ext.reg('minishop-filter-clear',MODx.form.FilterClear);
 /////////////////////////////////////////
+                                    */

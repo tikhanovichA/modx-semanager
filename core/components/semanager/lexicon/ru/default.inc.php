@@ -52,5 +52,9 @@ $_lang['semanager.common.fs.filename_tpl_template_desc'] = "Шаблон для 
 
 $_lang['semanager.common.other_settings'] = "Другие настройки";
 
+$_lang['semanager.elements.search_by_name'] = "Поиск по имени";
+$_lang['semanager.elements.static'] = "Статичный";
+$_lang['semanager.elements.file'] = "Файл элемента";
+
 
 $_lang['semanager.no_permission'] = 'Нет доступа';

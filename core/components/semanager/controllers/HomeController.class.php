@@ -34,24 +34,11 @@ class SEManagerHomeControllerManagerController extends SEManagerManagerControlle
     }
 
     public function loadCustomCssJs() {
-        $this->addJavascript($this->semanager->config['jsUrl'].'widgets/snippets.grid.js');
-        $this->addJavascript($this->semanager->config['jsUrl'].'widgets/chunks.grid.js');
-        $this->addJavascript($this->semanager->config['jsUrl'].'widgets/templates.grid.js');
-        $this->addJavascript($this->semanager->config['jsUrl'].'widgets/plugins.grid.js');
-
-        $this->addJavascript($this->semanager->config['jsUrl'].'widgets/snippets.tab.js');
+        $this->addJavascript($this->semanager->config['jsUrl'].'widgets/elements.grid.js');
         $this->addJavascript($this->semanager->config['jsUrl'].'widgets/common.tab.js');
 
         $this->addJavascript($this->semanager->config['jsUrl'].'widgets/home.panel.js');
-
-
         $this->addLastJavascript($this->semanager->config['jsUrl'].'sections/home.js');
     }
 
 }
-
-
-//$modx->regClientStartupScript($semanager->config['jsUrl'].'mgr/widgets/snippets.tab.js');
-//$modx->regClientStartupScript($semanager->config['jsUrl'].'mgr/widgets/common.tab.js');
-//$modx->regClientStartupScript($semanager->config['jsUrl'].'mgr/widgets/home.panel.js');
-

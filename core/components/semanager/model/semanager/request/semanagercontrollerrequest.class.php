@@ -67,7 +67,7 @@ class SEManagerControllerRequest extends modRequest {
         $modx =& $this->modx;
         $semanager =& $this->semanager;
 
-        $viewHeader = include $semanager->config['corePath'].'controllers/mgr/header.php';
+        //$viewHeader = include $semanager->config['corePath'].'controllers/mgr/header.php';
 
         $f = $semanager->config['corePath'].'controllers/mgr/'.$this->action.'.php';
 

@@ -16,7 +16,7 @@ SEManager.panel.CommonTab = function(config) {
                 ,listeners: {
                     click: function(){
                         Ext.Ajax.request({
-                            url: SEManager.config.connector_url
+                            url: SEManager.config.connectorUrl
                             ,success: function(response) {
                                 console.log(response.responseText);
 
@@ -169,10 +169,10 @@ Ext.extend(SEManager.panel.CommonTab,MODx.VerticalTabs,{
             paddingLeft: '0px'
         });
         Ext.Ajax.request({
-            url: SEManager.config.connector_url
+            url: SEManager.config.connectorUrl
             ,success: function(response) {
                 p.setValue(response.responseText);
-                p.enable();
+                //p.enable();
             }
             ,params: {
                 action: '/common/getsetting'
@@ -181,7 +181,7 @@ Ext.extend(SEManager.panel.CommonTab,MODx.VerticalTabs,{
         });
     }
     ,putSettingsValue: function() {
-       // alert('fired');
+        //alert('fired');
     }
 });
 Ext.reg('semanager-tab-common',SEManager.panel.CommonTab);

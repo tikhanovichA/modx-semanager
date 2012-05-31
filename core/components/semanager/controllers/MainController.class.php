@@ -12,11 +12,11 @@ abstract class SEManagerManagerController extends modExtraManagerController {
 
         $this->addCss($this->semanager->config['cssUrl'].'semanager.css');
         $this->addJavascript($this->semanager->config['jsUrl'].'semanager.js');
+
         $this->addHtml('
             <script>
                 Ext.onReady(function(){
                     SEManager.config = '.$this->modx->toJSON($this->semanager->config).';
-                    SEManager.config.connector_url = "'.$this->semanager->config['connectorUrl'].'";
                 });
             </script>
         ');

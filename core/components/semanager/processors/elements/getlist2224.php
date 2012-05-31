@@ -30,19 +30,19 @@ if (!$modx->hasPermission('view')) {return $modx->error->failure($modx->lexicon(
 
 $isLimit = !empty($_REQUEST['limit']);
 $start = $modx->getOption('start',$_REQUEST,0);
-$limit = $modx->getOption('limit',$_REQUEST,10);
+$limit = $modx->getOption('limit',$_REQUEST,20);
 $sort = $modx->getOption('sort',$_REQUEST,'pagetitle');
 $dir = $modx->getOption('dir',$_REQUEST,'ASC');
 $query = $modx->getOption('query',$_REQUEST, 0);
 
-$c = $modx->newQuery('modSnippet');
+$c = $modx->newQuery('modChunk');
 
-$count = $modx->getCount('modSnippet',$c);
+$count = $modx->getCount('modChunk',$c);
 
-#if ($sort == 'id') {$sort = 'modSnippet.id';}
-#$c->sortby($sort,$dir);
+/*if ($sort == 'id') {$sort = 'modSnippet.id';}
+$c->sortby($sort,$dir);     */
 if ($isLimit) {$c->limit($limit,$start);}
-$elements = $modx->getCollection('modSnippet', $c);
+$elements = $modx->getCollection('modChunk', $c);
 
 $list = array();
 foreach ($elements as $e){
@@ -56,28 +56,3 @@ foreach ($elements as $e){
 }
 
 return $this->outputArray($list, $count);
-
-
-/*$arr = array();
-foreach ($goods as $v) {
-    $tmp = array(
-     'id' => $v->get('id')
-    ,'pagetitle' => $v->get('pagetitle')
-    ,'parent' => $v->get('parent')
-    );
-    $tmp['url'] = $this->modx->makeUrl($v->get('id'), '', '', 'full');
-    if ($tmp2 = $modx->getObject('ModGoods', array('gid' => $tmp['id'], 'wid' => $warehouse)) ) {
-        $tmp2 = $tmp2->toArray();
-        unset($tmp2['id'], $tmp2['gid']);
-    }
-    else {
-        $tmp2 = array(
-            'wid' => $warehouse
-        );
-    }
-
-    $tmp = array_merge($tmp, $tmp2);
-
-    $arr[]= $tmp;
-}
-return $this->outputArray($arr, $count);*/

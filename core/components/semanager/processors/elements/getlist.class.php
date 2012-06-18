@@ -1,7 +1,7 @@
 <?php
 
 class modSEManagerGetListProcessor extends modObjectGetListProcessor {
-    public $classKey = 'modChunk';
+    //public $classKey = 'modChunk';
     //public $languageTopics = array('');
     //public $permission = '';
     public $defaultSortField = 'name';
@@ -20,41 +20,38 @@ class modSEManagerGetListProcessor extends modObjectGetListProcessor {
      * @return array
      */
     public function getData() {
-        $name = $this->getProperty('name',false);
         $data = array();
 
-        $criteria = array();
+        $type = $this->getProperty('type');
+        $this->classKey = 'mod'.ucfirst($type);
 
-        //print_r('ddddd');
+        $limit = intval($this->getProperty('limit'));
+        $start = intval($this->getProperty('start'));
 
-        $ch = $this->modx->getCollection('modChunk');
+        $c = $this->modx->newQuery($this->classKey);
+        $c = $this->prepareQueryBeforeCount($c);
+        $data['total'] = $this->modx->getCount($this->classKey,$c);
+        $c = $this->prepareQueryAfterCount($c);
 
+        $sortClassKey = $this->getSortClassKey();
+        $sortKey = $this->modx->getSelectColumns($sortClassKey,$this->getProperty('sortAlias',$sortClassKey),'',array($this->getProperty('sort')));
+        if (empty($sortKey)) $sortKey = $this->getProperty('sort');
+        $c->sortby($sortKey,$this->getProperty('dir'));
+        if ($limit > 0) {
+            $c->limit($limit,$start);
+        }
 
+        //$name = $this->getProperty('name',false);
 
+        //$criteria = array();
 
-        $data['total'] = $this->modx->getCount('modChunk');
-        $data['results'] = $ch;
-
+        $data['results'] = $this->modx->getCollection($this->classKey, $c);
         return $data;
-
-        /*
-        $settingsResult = $this->modx->call('modChunk', 'listSettings', array(
-            &$this->modx,
-            $criteria,
-            array(
-                $this->getProperty('sort') => $this->getProperty('dir'),
-            ),
-            $this->getProperty('limit'),
-            $this->getProperty('start'),
-        ));
-        */
 
     }
 
     public function prepareRow(xPDOObject $object) {
-        $elementArray = $object->toArray();
-
-        return $elementArray;
+        return $object->toArray();
     }
 }
 return 'modSEManagerGetListProcessor';

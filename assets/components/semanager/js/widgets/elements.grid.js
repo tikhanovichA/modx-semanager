@@ -15,7 +15,6 @@ SEManager.grid.Elements = function(config) {
         }];
     }
     config.tbar.push('->',{
-        // custom combo select
         xtype: 'semanager-combo-category'
     },'-',{
         xtype: 'textfield'
@@ -44,12 +43,20 @@ SEManager.grid.Elements = function(config) {
         }
     });
 
+    /*
+    var content_fields = []
+    switch (this.config.type){
+        case 'plugin': content_fields = ['']
+    }
+    */
+
 
     Ext.applyIf(config,{
          id: 'semanager-grid-elements-' + config.type + 's'
         ,url: SEManager.config.connectorUrl
         ,baseParams: {
             action: 'elements/getlist'
+            ,type: config.type
         }
         //,save_action: 'chunks/updatefromgrid'
         ,autosave: true
@@ -57,7 +64,9 @@ SEManager.grid.Elements = function(config) {
         ,paging: true
         ,remoteSort: true
         ,clicksToEdit: true
-        ,fields: ['id','name','static','static_file']
+        ,fields: ['id','name','static','static_file',
+            'description','category','snippet','plugincode','templatename','content','disabled']
+            // additional fields, for all elements. Needed for quick update
         ,columns: [{
             header: _('id')
             ,dataIndex: 'id'
@@ -100,6 +109,35 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         Ext.getCmp('semanager-combo-category').reset();
         this.getBottomToolbar().changePage(1);
         this.refresh();
+    }
+    ,getMenu: function() {
+        var m = [];
+        m.push({
+            text: _('quick_update_' + this.config.type)
+            ,handler: this.updateElement
+        });
+        m.push('-');
+        m.push({
+            text: _('semanager.elements.make_static_file')
+        });
+        this.addContextMenuItem(m);
+    }
+    ,updateElement: function(btn,e){
+        var r = this.menu.record;
+        r.clearCache = 1;
+        var que = MODx.load({
+            xtype: 'modx-window-quick-update-' + this.config.type
+            ,record: r
+            ,grid: this
+            ,listeners: {
+                'success' : {fn:function(r){
+                    this.refresh();
+                },scope:this}
+            }
+        });
+        que.reset();
+        que.setValues(r);
+        que.show(e.target);
     }
 });
 

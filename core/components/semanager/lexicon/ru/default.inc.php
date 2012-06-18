@@ -55,6 +55,8 @@ $_lang['semanager.common.other_settings'] = "Другие настройки";
 $_lang['semanager.elements.search_by_name'] = "Поиск по имени";
 $_lang['semanager.elements.static'] = "Статичный";
 $_lang['semanager.elements.file'] = "Файл элемента";
+$_lang['semanager.elements.make_static_file'] = "Сделать статичным";
+$_lang['semanager.elements.remove_static_file'] = "Удалить статичный файл";
 
 
 $_lang['semanager.no_permission'] = 'Нет доступа';

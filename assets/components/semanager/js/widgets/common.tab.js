@@ -6,42 +6,8 @@ SEManager.panel.CommonTab = function(config) {
 //    };
     Ext.applyIf(config,{
         id: 'semanager-tab-common'
-        ,activeItem: 1
+        ,activeItem: 0
         ,items: [{
-            title: _('semanager.common.actions')
-            ,items: [{
-                xtype: 'button'
-                ,text: _('semanager.common.actions.alltofiles')
-                ,bodyStyle: 'width: 300px;'
-                ,listeners: {
-                    click: function(){
-                        Ext.Ajax.request({
-                            url: SEManager.config.connectorUrl
-                            ,success: function(response) {
-                                console.log(response.responseText);
-
-                            }
-                            ,failure: function(response) {
-                                console.log(response);
-                            }
-                            ,params: {
-                                action: '/mgr/common/syncall'
-                                ,root: '111111'
-                            }
-                        });
-                    }
-                }
-            },{
-                xtype: 'button'
-                ,text: _('semanager.common.actions.alltodb')
-                ,bodyStyle: 'width: 300px'
-                ,listeners: {
-                    click: function() {
-                        console.log('cancel');
-                    }
-                }
-            }]
-        },{
             title: _('semanager.common.file_settings')
             ,cls: 'form-with-labels'
             ,items: [{

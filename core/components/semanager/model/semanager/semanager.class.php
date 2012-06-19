@@ -73,7 +73,7 @@ class SEManager {
             $this->modx->lexicon->load('semanager:default');
         }
 
-        $this->initDebug();
+        //$this->initDebug();
     }
 
     /**

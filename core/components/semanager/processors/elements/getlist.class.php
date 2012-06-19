@@ -41,6 +41,10 @@ class modSEManagerGetListProcessor extends modObjectGetListProcessor {
             $c->limit($limit,$start);
         }
 
+        //if($this->classKey == 'modTemplate'){
+
+        //}
+
         //$name = $this->getProperty('name',false);
 
         //$criteria = array();
@@ -53,5 +57,6 @@ class modSEManagerGetListProcessor extends modObjectGetListProcessor {
     public function prepareRow(xPDOObject $object) {
         return $object->toArray();
     }
+
 }
 return 'modSEManagerGetListProcessor';

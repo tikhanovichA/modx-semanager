@@ -23,13 +23,48 @@ SEManager.panel.Home = function(config) {
                 return { activeTab:this.items.indexOf(this.getActiveTab()) };
             }
             ,items: [{
-                 title: _('semanager.common_settings')
-                ,id: 'semanager-tab-common'
+                 title:  _('semanager.common.actions')
+                ,id: 'semanager-tab-actions'
+                ,layout: 'form'
                 ,items: [{
-                    xtype: "semanager-tab-common"
+                    html: '<p>'+_('actions')+'</p>'
+                    ,border: false
+                    ,bodyCssClass: 'panel-desc'
+                },{
+                    xtype: 'button'
+                    ,text: _('semanager.common.actions.alltofiles')
+                    ,bodyStyle: 'width: 300px;'
+                    ,listeners: {
+                        click: function(){
+                            Ext.Ajax.request({
+                                url: SEManager.config.connectorUrl
+                                ,success: function(response) {
+                                    console.log(response.responseText);
+
+                                }
+                                ,failure: function(response) {
+                                    console.log(response);
+                                }
+                                ,params: {
+                                    action: '/mgr/common/syncall'
+                                    ,root: '111111'
+                                }
+                            });
+                        }
+                    }
+                },{
+                    xtype: 'button'
+                    ,text: _('semanager.common.actions.alltodb')
+                    ,bodyStyle: 'width: 300px'
+                    ,listeners: {
+                        click: function() {
+                            console.log('cancel');
+                        }
+                    }
                 }]
             },{
                 title: _('chunks')
+                ,id: 'semanager-tab-chunks'
                 ,layout: 'form'
                 ,items: [{
                     html: '<p>'+_('chunks')+'</p>'
@@ -43,6 +78,7 @@ SEManager.panel.Home = function(config) {
                 }]
             },{
                 title: _('plugins')
+                ,id: 'semanager-tab-plugins'
                 ,layout: 'form'
                 ,items: [{
                     html: '<p>'+_('plugins')+'</p>'
@@ -56,6 +92,7 @@ SEManager.panel.Home = function(config) {
                 }]
             },{
                 title: _('snippets')
+                ,id: 'semanager-tab-snippets'
                 ,layout: 'form'
                 ,items: [{
                     html: '<p>' + _('snippets') + '</p>'
@@ -69,6 +106,7 @@ SEManager.panel.Home = function(config) {
                 }]
             },{
                 title: _('templates')
+                ,id: 'semanager-tab-templates'
                 ,layout: 'form'
                 ,items: [{
                     html: '<p>'+_('templates')+'</p>'
@@ -81,7 +119,14 @@ SEManager.panel.Home = function(config) {
                     ,type: 'template'
                 }]
             },{
+                title: _('semanager.common_settings')
+                ,id: 'semanager-tab-settings'
+                ,items: [{
+                    xtype: 'semanager-tab-common'
+                }]
+            },{
                 title: 'Git'
+                ,id: 'semanager-tab-git'
                 ,disabled: true
             }]
         }]

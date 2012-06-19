@@ -25,7 +25,7 @@
 $_lang['semanager.title'] = 'SE Управленец';
 $_lang['semanager.description'] = 'Модуль для расширенного контроля статических элементов';
 
-$_lang['semanager.common_settings'] = "Общие настройки";
+$_lang['semanager.common_settings'] = "Настройки";
 
 $_lang['semanager.common.actions'] = "Действия";
 

@@ -1,19 +1,8 @@
 <?php
 
 class modSEManagerGetListProcessor extends modObjectGetListProcessor {
-    //public $classKey = 'modChunk';
-    //public $languageTopics = array('');
     //public $permission = '';
     public $defaultSortField = 'name';
-
-    public function initialize() {
-        $initialized = parent::initialize();
-        $this->setDefaultProperties(array(
-            'name' => false,
-            'category' => false
-        ));
-        return $initialized;
-    }
 
     /**
      * Get a collection of modChunk objects
@@ -22,6 +11,9 @@ class modSEManagerGetListProcessor extends modObjectGetListProcessor {
     public function getData() {
         $data = array();
 
+        $nf = $this->getProperty('namefilter');
+        $cf = $this->getProperty('categoryfilter');
+
         $type = $this->getProperty('type');
         $this->classKey = 'mod'.ucfirst($type);
 
@@ -29,25 +21,31 @@ class modSEManagerGetListProcessor extends modObjectGetListProcessor {
         $start = intval($this->getProperty('start'));
 
         $c = $this->modx->newQuery($this->classKey);
+
+        if(!empty($nf)){
+            $key_filter = ($this->classKey=='modTemplate')?'templatename':'name';
+            $c->where(array($key_filter.':LIKE'=>'%'.$nf.'%'));
+        }
+
+        if(!empty($cf)){
+            $c->where(array('category'=>$cf));
+        }
+
         $c = $this->prepareQueryBeforeCount($c);
         $data['total'] = $this->modx->getCount($this->classKey,$c);
         $c = $this->prepareQueryAfterCount($c);
 
+        $sortField = $this->getProperty('sort');
+        $sortField = ($sortField == 'name' and $this->classKey=='modTemplate')?'templatename':'name';
+
         $sortClassKey = $this->getSortClassKey();
-        $sortKey = $this->modx->getSelectColumns($sortClassKey,$this->getProperty('sortAlias',$sortClassKey),'',array($this->getProperty('sort')));
-        if (empty($sortKey)) $sortKey = $this->getProperty('sort');
+        $sortKey = $this->modx->getSelectColumns($sortClassKey,$this->getProperty('sortAlias',$sortClassKey),'',array($sortField));
+        if (empty($sortKey)) $sortKey = $sortField;
         $c->sortby($sortKey,$this->getProperty('dir'));
+
         if ($limit > 0) {
             $c->limit($limit,$start);
         }
-
-        //if($this->classKey == 'modTemplate'){
-
-        //}
-
-        //$name = $this->getProperty('name',false);
-
-        //$criteria = array();
 
         $data['results'] = $this->modx->getCollection($this->classKey, $c);
         return $data;

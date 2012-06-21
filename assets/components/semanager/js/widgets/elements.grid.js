@@ -15,12 +15,28 @@ SEManager.grid.Elements = function(config) {
         }];
     }
     config.tbar.push('->',{
-        xtype: 'semanager-combo-category'
+        xtype: 'modx-combo'
+        ,name: 'filter_category'
+        ,id: 'semanager-filter-category'+config.type
+        ,emptyText: _('semanager.elements.filter_by_category')
+        ,fields: ['id','category']
+        ,displayField: 'category'
+        ,valueField: 'id'
+        ,width: 250
+        ,pageSize: 10
+        ,url: SEManager.config.connectorUrl
+        ,baseParams: {
+            action: 'elements/getcategorylist'
+            ,type: config.type
+        }
+        ,listeners: {
+            'select': {fn: this.filterByCategory, scope: this}
+        }
     },'-',{
         xtype: 'textfield'
         ,name: 'filter_name'
         ,id: 'semanager-filter-name-'+config.type
-        ,emptyText: _('semanager.elements.search_by_name')+'...'
+        ,emptyText: _('semanager.elements.filter_by_name')+'...'
         ,listeners: {
             'change': {fn: this.filterByName, scope: this}
             ,'render': {fn: function(cmp) {
@@ -35,21 +51,8 @@ SEManager.grid.Elements = function(config) {
         xtype: 'button'
         ,id: 'semanager-filter-clear-'+config.type
         ,text: _('filter_clear')
-        ,listeners: {
-            //'click': {fn: this.clearFilter, scope: this}
-            click: function(e) {
-                alert('click'+ e.xtype);
-            }
-        }
+        ,handler: this.clearFilter
     });
-
-    /*
-    var content_fields = []
-    switch (this.config.type){
-        case 'plugin': content_fields = ['']
-    }
-    */
-
 
     Ext.applyIf(config,{
          id: 'semanager-grid-elements-' + config.type + 's'
@@ -74,7 +77,7 @@ SEManager.grid.Elements = function(config) {
             ,sortable: true
         },{
             header: _('name')
-            ,dataIndex: 'name'
+            ,dataIndex: (config.type=='template')?'templatename':'name'
             ,sortable: true
         },{
             header: _('semanager.elements.static')
@@ -89,24 +92,29 @@ SEManager.grid.Elements = function(config) {
             render: function(p){
                 //alert(p.type);
             }
-            // pass
         }
     });
     SEManager.grid.Elements.superclass.constructor.call(this, config);
 };
 Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
 
-    filterByName: function(tf, newValue, oldValue) {
-        var nv = newValue || tf;
-        this.getStore().baseParams.name = nv;
+    filterByCategory: function(category, selected){
+        this.getStore().baseParams.categoryfilter = selected.id;
+        this.getBottomToolbar().changePage(1);
+        this.refresh();
+    }
+    ,filterByName: function(tf, newValue) {
+        this.getStore().baseParams.namefilter = newValue || tf;
         this.getBottomToolbar().changePage(1);
         this.refresh();
     }
     ,clearFilter: function() {
         this.getStore().baseParams = {
-            action: 'elements/getlist2224'
+            action: 'elements/getlist'
+            ,type: this.config.type
         };
-        Ext.getCmp('semanager-combo-category').reset();
+        Ext.getCmp('semanager-filter-category'+this.config.type).reset();
+        Ext.getCmp('semanager-filter-name-'+this.config.type).reset();
         this.getBottomToolbar().changePage(1);
         this.refresh();
     }
@@ -130,7 +138,7 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
             ,record: r
             ,grid: this
             ,listeners: {
-                'success' : {fn:function(r){
+                'success' : {fn:function(){
                     this.refresh();
                 },scope:this}
             }

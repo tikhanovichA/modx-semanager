@@ -138,34 +138,6 @@ Ext.reg('semanager-panel-home',SEManager.panel.Home);
 
 
 
-// TODO: сделать подключаемым отдельным файлом
-// Комбобокс выбора категории
-SEManager.combo.Category = function(config) {
-    config = config || {};
-    Ext.applyIf(config,{
-        name: 'category'
-        ,hiddenName: 'category'
-        ,displayField: 'category'
-        ,valueField: 'category'
-        ,fields: ['id','category']
-        ,pageSize: 2
-        ,emptyText: 'Фильтр по категории'
-        ,width: 250
-        ,url: SEManager.config.connectorUrl
-        ,baseParams: {
-            action: 'chunks/getcategorylist'
-        }
-    });
-    SEManager.combo.Category.superclass.constructor.call(this,config);
-};
-Ext.extend(SEManager.combo.Category,MODx.combo.ComboBox);
-Ext.reg('semanager-combo-category',SEManager.combo.Category);
-
-
-
-
-
-
                             /*
 
 

@@ -5,7 +5,7 @@ SEManager.panel.Home = function(config) {
         ,baseCls: 'modx-formpanel'
         ,cls: 'container'
         ,items: [{
-            html: '<h2>' + _('semanager.title') + '</h2>'
+            html: '<h2>' + _('semanager.title') + ' <sup style="font-size: 0.5em">' + _('semanager.description') + '</sup></h2>'
             ,border: false
             ,cls: 'modx-page-header'
         },{
@@ -19,15 +19,17 @@ SEManager.panel.Home = function(config) {
             ,stateful: true
             ,stateId: 'semanager-tabpanel-home'
             ,stateEvents: ['tabchange']
+            /*
             ,getState: function() {
                 return { activeTab:this.items.indexOf(this.getActiveTab()) };
             }
+            */
             ,items: [{
-                 title:  _('semanager.common.actions')
+                 title:  _('semanager.tabs.actions')
                 ,id: 'semanager-tab-actions'
                 ,layout: 'form'
                 ,items: [{
-                    html: '<p>'+_('actions')+'</p>'
+                    html: '<p>'+_('semanager.description')+'</p>'
                     ,border: false
                     ,bodyCssClass: 'panel-desc'
                 },{
@@ -119,7 +121,7 @@ SEManager.panel.Home = function(config) {
                     ,type: 'template'
                 }]
             },{
-                title: _('semanager.common_settings')
+                title: _('semanager.tabs.settings')
                 ,id: 'semanager-tab-settings'
                 ,items: [{
                     xtype: 'semanager-tab-common'

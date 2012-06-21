@@ -22,18 +22,20 @@
  * @subpackage lexicon
  *
  **/
-$_lang['semanager.title'] = 'SE Управленец';
+$_lang['semanager.title'] = 'SE Manager';
 $_lang['semanager.description'] = 'Модуль для расширенного контроля статических элементов';
 
-$_lang['semanager.common_settings'] = "Настройки";
-
-$_lang['semanager.common.actions'] = "Действия";
+$_lang['semanager.tabs.actions'] = "Действия";
+$_lang['semanager.tabs.actions.desc'] = "Описание действия";
+$_lang['semanager.tabs.settings'] = "Настройки";
+$_lang['semanager.tabs.settings.desc'] = "Описание настройки";
+//-- chunks, plugins, shippets, templates - default in core lexicon
 
 $_lang['semanager.common.actions.alltofiles'] = "Все в файлы";
 $_lang['semanager.common.actions.alltodb'] = "Все в базу данных";
 $_lang['semanager.common.actions.fromfiles'] = "Загрузить из файлов";
 
-$_lang['semanager.common.file_settings'] = "Настройки файлов";
+$_lang['semanager.common.fs'] = "Настройки файлов";
 
 $_lang['semanager.common.fs.elements_dir'] = "Каталог с элементами";
 $_lang['semanager.common.fs.elements_dir_desc'] = "Папка, куда компонент складывает все элементы";
@@ -50,7 +52,7 @@ $_lang['semanager.common.fs.filename_tpl_snippet_desc'] = "Шаблон для �
 $_lang['semanager.common.fs.filename_tpl_template'] = "Имя файла шаблона";
 $_lang['semanager.common.fs.filename_tpl_template_desc'] = "Шаблон для имен файл шаблонов, где {name} заменяется на имя элемента.";
 
-$_lang['semanager.common.other_settings'] = "Другие настройки";
+$_lang['semanager.common.os'] = "Другие настройки";
 
 $_lang['semanager.elements.filter_by_name'] = "Фильтр по имени";
 $_lang['semanager.elements.filter_by_category'] = "Фильтр по категории";

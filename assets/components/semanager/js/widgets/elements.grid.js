@@ -1,9 +1,11 @@
 SEManager.grid.Elements = function(config) {
     config = config || {};
 
-
-    //выносим во внешний файл либо ниже, в зависимости от конфига
-    //будем строить автоматически
+    this.exp = new Ext.grid.RowExpander({
+        tpl : new Ext.Template(
+            '<p class="desc">{description}</p>'
+        )
+    });
 
     if (!config.tbar) {
         config.tbar = [{
@@ -61,8 +63,8 @@ SEManager.grid.Elements = function(config) {
             action: 'elements/getlist'
             ,type: config.type
         }
-        //,save_action: 'chunks/updatefromgrid'
         ,autosave: true
+        ,plugins: this.exp
         ,autoHeight: true
         ,paging: true
         ,remoteSort: true
@@ -70,7 +72,7 @@ SEManager.grid.Elements = function(config) {
         ,fields: ['id','name','static','static_file',
             'description','category','snippet','plugincode','templatename','content','disabled']
             // additional fields, for all elements. Needed for quick update
-        ,columns: [{
+        ,columns: [this.exp,{
             header: _('id')
             ,dataIndex: 'id'
             ,width: 35
@@ -88,11 +90,18 @@ SEManager.grid.Elements = function(config) {
             header: _('semanager.elements.file')
             ,dataIndex: 'static_file'
         }]
-        ,listeners: {
-            render: function(p){
-                //alert(p.type);
-            }
-        }
+        ,tools: [{
+            id: 'plus'
+            ,qtip: _('expand_all')
+            ,handler: this.expandAll
+            ,scope: this
+        },{
+            id: 'minus'
+            ,hidden: true
+            ,qtip: _('collapse_all')
+            ,handler: this.collapseAll
+            ,scope: this
+        }]
     });
     SEManager.grid.Elements.superclass.constructor.call(this, config);
 };
@@ -126,7 +135,8 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         });
         m.push('-');
         m.push({
-            text: _('semanager.elements.make_static_file')
+            text: (this.menu.record.static)?_('semanager.elements.remove_static_file'):_('semanager.elements.make_static_file')
+            ,handler: this.updateStaticElement
         });
         this.addContextMenuItem(m);
     }
@@ -146,6 +156,14 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         que.reset();
         que.setValues(r);
         que.show(e.target);
+    }
+    ,updateStaticElement: function(){
+        var r = this.menu.record;
+        r.static_file = '123';
+        //r.refresh();
+        console.log(r);
+
+
     }
 });
 

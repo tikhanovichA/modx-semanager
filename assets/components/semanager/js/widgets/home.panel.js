@@ -33,36 +33,49 @@ SEManager.panel.Home = function(config) {
                     ,border: false
                     ,bodyCssClass: 'panel-desc'
                 },{
-                    xtype: 'button'
-                    ,text: _('semanager.common.actions.alltofiles')
-                    ,bodyStyle: 'width: 300px;'
-                    ,listeners: {
-                        click: function(){
-                            Ext.Ajax.request({
-                                url: SEManager.config.connectorUrl
-                                ,success: function(response) {
-                                    console.log(response.responseText);
+                    bodyCssClass: 'main-wrapper'
+                    ,border: false
+                    ,layout: 'column'
+                    ,items: [{
+                        columnWidth: '30%'
+                        ,border: false
+                        ,items: [{
+                            xtype: 'button'
+                            ,text: _('semanager.common.actions.alltofiles')
+                            ,listeners: {
+                                click: function(){
+                                    Ext.Ajax.request({
+                                        url: SEManager.config.connectorUrl
+                                        ,success: function(response) {
+                                            console.log(response.responseText);
 
+                                        }
+                                        ,failure: function(response) {
+                                            console.log(response);
+                                        }
+                                        ,params: {
+                                            action: '/mgr/common/syncall'
+                                            ,root: '111111'
+                                        }
+                                    });
                                 }
-                                ,failure: function(response) {
-                                    console.log(response);
+                            }
+                        }]
+
+                    },{
+                        columnWidth: '30%'
+                        ,border: false
+                        ,items: [{
+                            xtype: 'button'
+                            ,text: _('semanager.common.actions.alltodb')
+                            ,bodyStyle: 'width: 300px'
+                            ,listeners: {
+                                click: function() {
+                                    console.log('cancel');
                                 }
-                                ,params: {
-                                    action: '/mgr/common/syncall'
-                                    ,root: '111111'
-                                }
-                            });
-                        }
-                    }
-                },{
-                    xtype: 'button'
-                    ,text: _('semanager.common.actions.alltodb')
-                    ,bodyStyle: 'width: 300px'
-                    ,listeners: {
-                        click: function() {
-                            console.log('cancel');
-                        }
-                    }
+                            }
+                        }]
+                    }]
                 }]
             },{
                 title: _('chunks')

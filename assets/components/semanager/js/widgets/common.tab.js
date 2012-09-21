@@ -8,7 +8,7 @@ SEManager.panel.CommonTab = function(config) {
         id: 'semanager-tab-common'
         ,activeItem: 0
         ,items: [{
-            title: _('semanager.common.file_settings')
+            title: _('semanager.common.fs')
             ,cls: 'form-with-labels'
             ,items: [{
                 xtype: 'textfield'
@@ -122,7 +122,9 @@ SEManager.panel.CommonTab = function(config) {
         //==========================
             }]
         },{
-            title: _('semanager.common.other_settings')
+            title: _('semanager.common.os')
+        },{
+            title: _('semanager.excluded')
         }]
     });
     SEManager.panel.CommonTab.superclass.constructor.call(this,config);

@@ -53,6 +53,7 @@ $_lang['semanager.common.fs.filename_tpl_template'] = "Имя файла шаб�
 $_lang['semanager.common.fs.filename_tpl_template_desc'] = "Шаблон для имен файл шаблонов, где {name} заменяется на имя элемента.";
 
 $_lang['semanager.common.os'] = "Другие настройки";
+$_lang['semanager.excluded'] = "Исключения";
 
 $_lang['semanager.elements.filter_by_name'] = "Фильтр по имени";
 $_lang['semanager.elements.filter_by_category'] = "Фильтр по категории";
@@ -61,6 +62,30 @@ $_lang['semanager.elements.static'] = "Статичный";
 $_lang['semanager.elements.file'] = "Файл элемента";
 $_lang['semanager.elements.make_static_file'] = "Сделать статичным";
 $_lang['semanager.elements.remove_static_file'] = "Удалить статичный файл";
+$_lang['semanager.elements.exclude_element'] = "Исключить элемент";
 
 
 $_lang['semanager.no_permission'] = 'Нет доступа';
+
+/* settings */
+
+$_lang['setting_semanager.elements_dir'] = 'Папка с элементами';
+$_lang['setting_semanager.elements_dir_desc'] = 'Путь к папке с элементами. Можно указывать плейсхолдеры вида {assets}';
+
+$_lang['setting_semanager.filename_tpl_chunk'] = 'Шаблон имени файла для чанка';
+$_lang['setting_semanager.filename_tpl_chunk_desc'] = 'При сохранении на диск имя файла формируется по заданному шаблону';
+
+$_lang['setting_semanager.filename_tpl_plugin'] = 'Шаблон имени файла для плагина';
+$_lang['setting_semanager.filename_tpl_plugin_desc'] = 'При сохранении на диск имя файла формируется по заданному шаблону';
+
+$_lang['setting_semanager.filename_tpl_snippet'] = 'Шаблон имени файла для сниппета';
+$_lang['setting_semanager.filename_tpl_snippet_desc'] = 'При сохранении на диск имя файла формируется по заданному шаблону';
+
+$_lang['setting_semanager.filename_tpl_template'] = 'Шаблон имени файла для шаблона';
+$_lang['setting_semanager.filename_tpl_template_desc'] = 'При сохранении на диск имя файла формируется по заданному шаблону';
+
+$_lang['setting_semanager.type_separation'] = 'Разделение по типам';
+$_lang['setting_semanager.type_separation_desc'] = 'Если да, то элементы будут сохранятся в паки согласно типам: чанки в chunks, сниппеты в snippets и т.д.';
+
+$_lang['setting_semanager.use_categories'] = 'Использовать категории';
+$_lang['setting_semanager.use_categories_desc'] = 'Если да, то при сохранении элементов будут создаваться папки с именами категорий, внутри которых будут сохраняться элементы.';

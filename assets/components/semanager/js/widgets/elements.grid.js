@@ -56,39 +56,37 @@ SEManager.grid.Elements = function(config) {
         ,handler: this.clearFilter
     });
 
-    Ext.applyIf(config,{
-         id: 'semanager-grid-elements-' + config.type + 's'
-        ,url: SEManager.config.connectorUrl
-        ,baseParams: {
-            action: 'elements/getlist'
-            ,type: config.type
-        }
-        ,autosave: true
-        ,plugins: this.exp
-        ,autoHeight: true
-        ,paging: true
-        ,remoteSort: true
-        ,clicksToEdit: true
-        ,fields: ['id','name','static','static_file',
-            'description','category','snippet','plugincode','templatename','content','disabled']
-            // additional fields, for all elements. Needed for quick update
-        ,columns: [this.exp,{
+    var ec = new Ext.ux.grid.CheckColumn({
+        header: _('semanager.elements.static')
+        ,dataIndex: 'static'
+        ,editable: false
+        ,width: 20
+        ,sortable: true
+    });
+
+    this.cm = new Ext.grid.ColumnModel({
+        columns: [this.exp,{
             header: _('id')
             ,dataIndex: 'id'
-            ,width: 35
+            ,width: 15
             ,sortable: true
         },{
             header: _('name')
             ,dataIndex: (config.type=='template')?'templatename':'name'
-            ,sortable: true
-        },{
-            header: _('semanager.elements.static')
-            ,dataIndex: 'static'
-            ,width: 100
+            ,width: 50
             ,sortable: true
         },{
             header: _('semanager.elements.file')
             ,dataIndex: 'static_file'
+            ,sortable: false
+            ,editable: false
+        },{
+            header: _('semanager.elements.static')
+            ,dataIndex: 'static'
+            ,width: 30
+            ,sortable: true
+            ,editable: true
+            ,renderer: this.renderDynField.createDelegate(this,[this],true)
         }]
         ,tools: [{
             id: 'plus'
@@ -102,12 +100,101 @@ SEManager.grid.Elements = function(config) {
             ,handler: this.collapseAll
             ,scope: this
         }]
+        /* Editors are pushed here. I think that they should be in general grid
+         * definitions (modx.grid.js) and activated via a config property (loadEditor: true) */
+        ,getCellEditor: function(colIndex, rowIndex) {
+            var field = this.getDataIndex(colIndex);
+            if (field == 'static') {
+                var rec = config.store.getAt(rowIndex);
+                var o = MODx.load({
+                    xtype: 'combo-boolean'
+                });
+                return new Ext.grid.GridEditor(o);
+            }
+            return Ext.grid.ColumnModel.prototype.getCellEditor.call(this, colIndex, rowIndex);
+        }
+
+    });
+
+    Ext.applyIf(config,{
+        cm: this.cm
+        ,fields: ['id','name','static','static_file', 'description','category','snippet','plugincode','templatename','content','disabled']
+        ,id: 'semanager-grid-elements-' + config.type + 's'
+        ,url: SEManager.config.connectorUrl
+        ,baseParams: {
+            action: 'elements/getlist'
+            ,type: config.type
+        }
+        ,clicksToEdit: 2
+        ,autosave: true
+        ,save_action: 'elements/updatefromgrid'
+        ,plugins: this.exp
+        ,autoHeight: true
+        ,paging: true
+        ,remoteSort: true
+        ,listeners: {
+            'afterAutoSave': {fn:function() {
+                console.log('123333333');
+            },scope:this}
+        }
+
+
     });
     SEManager.grid.Elements.superclass.constructor.call(this, config);
+    //this.on('celldblclick',this.onDirty,this);
 };
 Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
 
-    filterByCategory: function(category, selected){
+    renderDynField: function(v,md,rec,ri,ci,s,g) {
+        var r = s.getAt(ri).data;
+        var f,idx;
+        var oz = v;
+        var xtype = this.config.dynProperty;
+        if (!r[xtype] || r[xtype] == 'combo-boolean') {
+            f = MODx.grid.Grid.prototype.rendYesNo;
+            oz = f(v == 1,md);
+        } else if (r[xtype] === 'datefield') {
+            f = Ext.util.Format.dateRenderer('Y-m-d');
+            oz = f(v);
+        } else if (r[xtype] === 'password') {
+            f = this.rendPassword;
+            oz = f(v,md);
+        } else if (r[xtype].substr(0,5) == 'combo' || r[xtype] == 'list' || r[xtype].substr(0,9) == 'modx-combo') {
+            var cm = g.getColumnModel();
+            var ed = cm.getCellEditor(ci,ri);
+            var cb;
+            if (!ed) {
+                r.xtype = r.xtype || 'combo-boolean';
+                cb = this.createCombo(r);
+                ed = new Ext.grid.GridEditor(cb);
+                cm.setEditor(ci,ed);
+            } else if (ed && ed.field && ed.field.xtype == 'modx-combo') {
+                cb = ed.field;
+            }
+            if (r[xtype] != 'list') {
+                f = Ext.util.Format.comboRenderer(ed.field);
+                oz = f(v);
+            } else if (cb) {
+                idx = cb.getStore().find(cb.valueField,v);
+                rec = cb.getStore().getAt(idx);
+                if (rec) {
+                    oz = rec.get(cb.displayField);
+                } else {
+                    oz = v;
+                }
+            }
+        }
+        return Ext.util.Format.htmlEncode(oz);
+    }
+
+    ,onDirty: function(){
+        console.log(this.config.panel);
+
+        if (this.config.panel) {
+            Ext.getCmp(this.config.panel).fireEvent('fieldChange');
+        }
+    }
+    ,filterByCategory: function(category, selected){
         this.getStore().baseParams.categoryfilter = selected.id;
         this.getBottomToolbar().changePage(1);
         this.refresh();
@@ -138,6 +225,12 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
             text: (this.menu.record.static)?_('semanager.elements.remove_static_file'):_('semanager.elements.make_static_file')
             ,handler: this.updateStaticElement
         });
+        m.push('-');
+        m.push({
+            text: _('semanager.elements.exclude_element')
+            ,handler: null
+            ,disable: true
+        });
         this.addContextMenuItem(m);
     }
     ,updateElement: function(btn,e){
@@ -159,7 +252,19 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
     }
     ,updateStaticElement: function(){
         var r = this.menu.record;
-        r.static_file = '123';
+        r.clearCache = 1;
+        Ext.Ajax.request({
+            url: SEManager.config.connectorUrl
+            ,success: function(response) {
+                //p.setValue(response.responseText);
+                //p.enable();
+            }
+            ,params: {
+                action: '/elements/setelement'
+                ,element: r
+            }
+        });
+        //r.static_file = '123';
         //r.refresh();
         console.log(r);
 

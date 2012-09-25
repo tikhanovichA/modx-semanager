@@ -134,8 +134,11 @@ SEManager.grid.Elements = function(config) {
         ,remoteSort: true
         ,listeners: {
             'afterAutoSave': {fn:function() {
-                console.log('123333333');
+                this.refresh();
             },scope:this}
+            ,'afterEdit': {fn:function(e) {
+                e.record.data.type = config.type;
+            }}
         }
 
 

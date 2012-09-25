@@ -37,9 +37,15 @@ SEManager.panel.Home = function(config) {
                     ,border: false
                     ,layout: 'column'
                     ,items: [{
-                        columnWidth: '30%'
-                        ,border: false
+                        columnWidth: '60'
+                        ,border: true
                         ,items: [{
+                            xtype: 'button'
+                            ,text: 'Обновить (обновить файлы, проверить на новые)'
+                        },{
+                            xtype: 'button'
+                            ,text: 'Удалить пустые папки'
+                        },{
                             xtype: 'button'
                             ,text: _('semanager.common.actions.alltofiles')
                             ,listeners: {

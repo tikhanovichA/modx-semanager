@@ -121,6 +121,8 @@ class SEManager {
      */
     public function syncAll(){
 
+        // папку elements нужно создавать при установке
+        // проверять на ее наличие нужно наверное в init
         // TODO: перейти на переменную в config
         $this->elements_dir = $this->config['elements_dir'];
 
@@ -162,7 +164,101 @@ class SEManager {
 
     }
 
+    //public function replaceFileElement($element){}
+    //public function removeFileElement($element){}
+    //public function renameFileElement($element){}
+
+    //public function oneElementFromStatic(){}
+
+    public function getTypeOfElement($element){
+        $config = $this->modx->getConfig();
+        $dbtype = $config['dbtype'];
+        return str_replace(array($dbtype,'mod','_'), '', strtolower(get_class($element)));
+    }
+
+    public function makePath($element){
+
+        $path = $this->modx->getOption('semanager.elements_dir', null, MODX_ASSETS_PATH.'/elements/');
+        $type_separation = $this->modx->getOption('semanager.type_separation', null, true);
+        $use_categories = $this->modx->getOption('semanager.use_categories', null, true);
+
+        if($type_separation){
+            $path .= $this->getTypeOfElement($element).'s/';
+        }
+
+        if($use_categories){
+            $categories_map = $this->getCategoriesMap($element->category);
+            if($categories_map != ''){
+                $path .= $categories_map . '/';
+            }
+        }
+
+        return $path;
+
+    }
+
+    private  function _gc(){
+
+        //$ed = $this->modx->getOption('semanager.elements_dir', null, MODX_ASSETS_PATH.'/elements/');
+
+    }
+
+    public function unmakeStaticElement($element){
+
+        $file_name = $element->get('static_file');
+
+        $content = $element->getContent();
+        $element->set('static_file', '');
+        $element->set('static', false);
+        $element->setContent($content);
+
+        if($element->save()){
+            unlink($file_name);
+            return $element;
+        }else{
+            return false;
+        }
+
+    }
+
+
+    public function makeStaticElement($element){
+
+        $path = $this->makePath($element);
+        $type = $this->getTypeOfElement($element);
+
+        $filename_tpl = $this->modx->getOption('semanager.filename_tpl_' . $type, null, '{name}.el.src');
+
+        if($type == 'template'){
+            $file_path = $path . str_replace('{name}', $element->templatename, $filename_tpl);
+        }else{
+            $file_path = $path . str_replace('{name}', $element->name, $filename_tpl);
+        }
+
+        $this->modx->log(E_ERROR, $file_path);
+
+        $this->_makeDirs(dirname($file_path));
+
+        touch($file_path);
+
+        $content = $element->getContent();
+        $element->set('static_file', $file_path);
+        $element->set('static', true);
+        $element->setFileContent($content);
+
+        if($element->save()){
+            return $element;
+        }else{
+            return false;
+        }
+
+    }
+
+    // create static file
     public function oneElementToStatic($element, $path){
+
+        // уйти от переменной path. она должна по конфигам определяться
+        //$this->elements_dir = $this->config['elements_dir'];
 
         $use_categories = $this->modx->getOption('semanager.use_categories', null, true);
 
@@ -280,7 +376,5 @@ class SEManager {
         if (!$this->_makeDirs($pStrPath)) return false;
         return @mkdir($strPath);
     }
-
-
 
 }

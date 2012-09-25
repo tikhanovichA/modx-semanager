@@ -1,6 +1,8 @@
 <?php
 class modSEManagerUpdateElementsFromGridProcessor extends modProcessor {
 
+    public $semanager = null;
+
     public function checkPermissions() {
         return true;
     }
@@ -14,44 +16,38 @@ class modSEManagerUpdateElementsFromGridProcessor extends modProcessor {
      *
      * @return mixed
      */
-    public function initialize() {
-        $data = $this->getProperty('data');
-        if (empty($data)) return $this->modx->lexicon('и');
+    public function process() {
 
+        $data = $this->getProperty('data');
+        if (empty($data)) return $this->modx->lexicon('semanager.error.ufg_no_data');
+
+        $this->modx->loadClass("semanager.SEManager");
+        $this->semanager = new SEManager($this->modx);
+
+        // get data from row
         $record = $this->modx->fromJSON($data);
 
-        /* get context */
-        //if (empty($record['key'])) return $this->modx->error->failure($this->modx->lexicon('context_err_ns'));
-        //$this->context = $this->modx->getObject('modContext', $record['key']);
-        //if (empty($this->context)) return $this->modx->lexicon('context_err_nf');
+        $e = $this->modx->getObject('mod'.ucfirst($record['type']), array(
+            'id' => $record['id']
+        ));
 
-        $this->setProperties($record);
-        return true;
-    }
+        $this->modx->log(E_ERROR, $record['static']);
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return mixed
-     */
-    public function process() {
-        //if (!$this->validate()) {
-        //    return $this->failure();
-        //}
+        if($record['static']){
+            // make static
+            $this->semanager->makeStaticElement($e);
 
-        /*
-        $this->context->fromArray($this->getProperties());
-        if ($this->context->save() == false) {
-            $this->modx->error->checkValidation($this->context);
-            return $this->failure($this->modx->lexicon('context_err_save'));
+            //$record['static'] = true;
+            //$record['static_file'] = $e->static_file;
+        }else{
+            // unmake static
+            $this->semanager->unmakeStaticElement($e);
+
+
+
         }
 
-        */
-        //$this->runOnUpdateEvent();
-        //$this->logManagerAction();
-
-        //return $this->success('',$this->context);
-        return $this->success('');
+        return $this->success('Updated');
     }
 
     /**

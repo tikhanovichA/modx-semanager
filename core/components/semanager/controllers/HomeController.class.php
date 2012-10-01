@@ -34,6 +34,7 @@ class SEManagerHomeControllerManagerController extends SEManagerManagerControlle
     }
 
     public function loadCustomCssJs() {
+        $this->addCss($this->semanager->config['cssUrl'].'semanager.css');
         $this->addJavascript($this->semanager->config['jsUrl'].'widgets/elements.grid.js');
         $this->addJavascript($this->semanager->config['jsUrl'].'widgets/common.tab.js');
 

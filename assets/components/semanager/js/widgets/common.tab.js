@@ -6,11 +6,33 @@ SEManager.panel.CommonTab = function(config) {
 //    };
     Ext.applyIf(config,{
         id: 'semanager-tab-common'
-        ,activeItem: 0
+        ,border: false
+        ,plain: true
+        ,deferredRender: true
+        ,anchor: '97%'
+        //,activeItem: 5
         ,items: [{
             title: _('semanager.common.fs')
-            ,cls: 'form-with-labels'
+            ,anchor: '100%'
+            ,defaults: {
+                msgTarget: 'under'
+            }
             ,items: [{
+                xtype: 'modx-combo-boolean'
+                ,name: 'test-cb'
+                ,hiddenName: 'test-cb'
+                ,id: 'sm-test-cb'
+                ,fieldLabel: _('semanager.common.os.use_categories')
+                ,description: MODx.expandHelp ? '' : _('semanager.common.os.use_categories_desc')
+                ,anchor: '40%'
+                ,value: true
+            },{
+                xtype: MODx.expandHelp ? 'label' : 'hidden'
+                ,forId: 'sm-test-cb'
+                ,html: _('semanager.common.os.use_categories_desc')
+                ,cls: 'desc-under'
+
+            },{
                 xtype: 'textfield'
                 ,name: 'elements_dir'
                 ,id: 'elements_dir'
@@ -123,6 +145,41 @@ SEManager.panel.CommonTab = function(config) {
             }]
         },{
             title: _('semanager.common.os')
+            ,cls: 'form-with-labels'
+            ,items: [{
+                xtype: 'combo-boolean'
+                ,name: 'use_categories'
+                ,id: 'use_categories'
+                ,fieldLabel: _('semanager.common.os.use_categories')
+                ,description: MODx.expandHelp ? '' : _('semanager.common.os.use_categories_desc')
+                ,anchor: '100%'
+                ,disabled: false
+                ,listeners: {
+                    render: {
+                        fn: this.getSettingsValue
+                    }
+                    ,blur: {
+                        fn: this.putSettingsValue
+                    }
+                }
+            },{
+                xtype: 'combo-boolean'
+                ,name: 'type_separation'
+                ,id: 'type_separation'
+                ,fieldLabel: _('semanager.common.os.type_separation')
+                //,description: MODx.expandHelp ? '' : _('semanager.common.os.type_separation_desc')
+                ,description: _('semanager.common.os.type_separation_desc')
+                ,anchor: '100%'
+                ,disabled: false
+                ,listeners: {
+                    render: {
+                        fn: this.getSettingsValue
+                    }
+                    ,blur: {
+                        fn: this.putSettingsValue
+                    }
+                }
+            }]
         },{
             title: _('semanager.excluded')
         }]
@@ -131,11 +188,13 @@ SEManager.panel.CommonTab = function(config) {
 };
 
 Ext.extend(SEManager.panel.CommonTab,MODx.VerticalTabs,{
-    windows: {}
-    ,getSettingsValue: function(p){
+
+    getSettingsValue: function(p){
+
         p.getEl().parent().applyStyles({
             paddingLeft: '0px'
         });
+
         Ext.Ajax.request({
             url: SEManager.config.connectorUrl
             ,success: function(response) {

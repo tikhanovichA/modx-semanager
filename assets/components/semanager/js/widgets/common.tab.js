@@ -6,25 +6,45 @@ SEManager.panel.CommonTab = function(config) {
 //    };
     Ext.applyIf(config,{
         id: 'semanager-tab-common'
-        ,border: false
-        ,plain: true
-        ,deferredRender: true
-        ,anchor: '97%'
-        //,activeItem: 5
+        ,cls: 'vertical-tabs-panel'
+        ,defaults: {
+            bodyCssClass: 'vertical-tabs-body'
+            ,autoScroll: true
+            ,autoHeight: true
+            ,autoWidth: true
+            ,layout: 'form'
+        }
         ,items: [{
             title: _('semanager.common.fs')
             ,anchor: '100%'
+
+            /*
             ,defaults: {
                 msgTarget: 'under'
-            }
+
+                ,hideMode: 'offsets'
+                ,autoWidth: false
+                ,anchor: '100%'
+                ,style: {
+                    paddingLeft: '0px'
+                }
+            } */
+
             ,items: [{
                 xtype: 'modx-combo-boolean'
                 ,name: 'test-cb'
                 ,hiddenName: 'test-cb'
                 ,id: 'sm-test-cb'
                 ,fieldLabel: _('semanager.common.os.use_categories')
+                ,itemCls: 'clllllassss'
+                ,cls: 'testcls'
+                ,defaults: {
+                    paddingLeft: '0px'
+                    ,autoWidth: true
+                }
+
                 ,description: MODx.expandHelp ? '' : _('semanager.common.os.use_categories_desc')
-                ,anchor: '40%'
+                //,anchor: '40%'
                 ,value: true
             },{
                 xtype: MODx.expandHelp ? 'label' : 'hidden'
@@ -35,11 +55,11 @@ SEManager.panel.CommonTab = function(config) {
             },{
                 xtype: 'textfield'
                 ,name: 'elements_dir'
-                ,id: 'elements_dir'
+                ,id: 'semanager-elements_dir'
                 ,fieldLabel: _('semanager.common.fs.elements_dir')
                 ,description: MODx.expandHelp ? '' : _('semanager.common.fs.elements_dir_desc')
                 ,anchor: '100%'
-                ,disabled: true
+                //,disabled: true
                 ,listeners: {
                     render: {
                         fn: this.getSettingsValue
@@ -50,7 +70,7 @@ SEManager.panel.CommonTab = function(config) {
                 }
             },{
                 xtype: MODx.expandHelp ? 'label' : 'hidden'
-                ,forId: 'elements-path'
+                ,forId: 'semanager-elements_dir'
                 ,html: _('semanager.common.fs.elements_dir_desc')
                 ,cls: 'desc-under'
         //========================
@@ -171,8 +191,14 @@ SEManager.panel.CommonTab = function(config) {
                 ,description: _('semanager.common.os.type_separation_desc')
                 ,anchor: '100%'
                 ,disabled: false
+
                 ,listeners: {
-                    render: {
+                    load: {
+                        fn: function(){
+                            alert('allllerto!');
+                        }
+                    }
+                    ,render: {
                         fn: this.getSettingsValue
                     }
                     ,blur: {
@@ -191,9 +217,15 @@ Ext.extend(SEManager.panel.CommonTab,MODx.VerticalTabs,{
 
     getSettingsValue: function(p){
 
-        p.getEl().parent().applyStyles({
-            paddingLeft: '0px'
-        });
+        var w = p.getEl().parent().getWidth()-12-1;
+
+        console.log(p.getEl().getComputedWidth());
+
+        console.log(p.getEl().dom.style.cssText);
+
+        //p.getEl().parent().applyStyles({paddingLeft: '0px'});
+
+        //p.getEl().
 
         Ext.Ajax.request({
             url: SEManager.config.connectorUrl

@@ -41,7 +41,9 @@ class modSEManagerGetListProcessor extends modObjectGetListProcessor {
         $sortClassKey = $this->getSortClassKey();
         $sortKey = $this->modx->getSelectColumns($sortClassKey,$this->getProperty('sortAlias',$sortClassKey),'',array($sortField));
         if (empty($sortKey)) $sortKey = $sortField;
-        $c->sortby($sortKey,$this->getProperty('dir'));
+        //$c->sortby($sortKey,$this->getProperty('dir'));
+
+        $c->sortby('static', 'ASC');
 
         if ($limit > 0) {
             $c->limit($limit,$start);

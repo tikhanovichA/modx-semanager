@@ -1,4 +1,4 @@
-SEManager.grid.Elements = function(config) {
+SEManager.grid.Files = function(config) {
     config = config || {};
 
     this.exp = new Ext.grid.RowExpander({
@@ -69,12 +69,12 @@ SEManager.grid.Elements = function(config) {
             header: _('id')
             ,dataIndex: 'id'
             ,width: 15
+            ,sortable: true
         },{
             header: _('name')
             ,dataIndex: (config.type=='template')?'templatename':'name'
             ,width: 50
             ,sortable: true
-            ,sortDir: 'ASC'
         },{
             header: _('semanager.elements.file')
             ,dataIndex: 'static_file'
@@ -131,8 +131,7 @@ SEManager.grid.Elements = function(config) {
         ,plugins: this.exp
         ,autoHeight: true
         ,paging: true
-        //,remoteSort: true
-        ,remoteSort: false
+        ,remoteSort: true
         ,listeners: {
             'afterAutoSave': {fn:function() {
                 this.refresh();
@@ -141,13 +140,13 @@ SEManager.grid.Elements = function(config) {
                 e.record.data.type = config.type;
             }}
         }
+
+
     });
     SEManager.grid.Elements.superclass.constructor.call(this, config);
     //this.on('celldblclick',this.onDirty,this);
 };
 Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
-
-
 
     renderDynField: function(v,md,rec,ri,ci,s,g) {
         var r = s.getAt(ri).data;
@@ -276,11 +275,4 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
     }
 });
 
-Ext.reg('semanager-grid-elements-chunks', SEManager.grid.Elements,{
-    loadComplete: function(){
-        console.log('12345');
-    }
-});
-Ext.reg('semanager-grid-elements-plugins', SEManager.grid.Elements);
-Ext.reg('semanager-grid-elements-snippets', SEManager.grid.Elements);
-Ext.reg('semanager-grid-elements-templates', SEManager.grid.Elements);
+Ext.reg('semanager-grid-files', SEManager.grid.Elements);

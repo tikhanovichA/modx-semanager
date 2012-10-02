@@ -12,14 +12,14 @@ SEManager.panel.Home = function(config) {
             xtype: 'modx-tabs'
             ,defaults: {
                 autoHeight: true
+                ,hideMode: 'offsets'
+                ,border: true
             }
-            ,border: true
-            ,hideMode: 'offsets'
             ,cls: 'x-form-label-top'
             ,stateful: true
             ,stateId: 'semanager-tabpanel-home'
             ,stateEvents: ['tabchange']
-            ,activeItem: 5
+            ,activeItem: 0
             /*
             ,getState: function() {
                 return { activeTab:this.items.indexOf(this.getActiveTab()) };
@@ -30,9 +30,57 @@ SEManager.panel.Home = function(config) {
                 ,id: 'semanager-tab-actions'
                 ,layout: 'form'
                 ,items: [{
-                    html: '<p>'+_('semanager.description')+'</p>'
-                    ,border: false
+                    //html: '<p>'+_('semanager.description')+'</p>'
+                    border: false
                     ,bodyCssClass: 'panel-desc'
+                    ,items: [{
+                        xtype: 'button'
+                        ,text: 'Синхронизировать все'
+                        ,icon: MODx.config.template_url + 'images/restyle/icons/refresh.png'
+                        ,cls:'x-btn-text-icon'
+                        ,style: {
+                            paddingLeft: '5px'
+                            ,float: 'left'
+                            ,marginRight: '20px'
+                        }
+                    },{
+                        html: '<p>Синхронизирует все элементы и сканирует папку на наличие новых файлов</p>'
+                        ,border: false
+                        ,style: {
+                            lineHeight: '30px'
+                        }
+                    }]
+                },{
+                    bodyCssClass: 'main-wrapper'
+                    ,border: false
+                    ,items: [{
+                        xtype: 'modx-vtabs'
+                        ,cls: 'vertical-tabs-panel'
+                        ,bodyCssClass: 'vertical-tabs-body'
+                        ,border: false
+                        ,defaults: {
+                            autoScroll: true
+                            ,autoHeight: true
+                            ,autoWidth: true
+                            //,layout: 'form'
+                        }
+                        ,items: [{
+                            title: 'Файлы (4)'
+                            ,bodyStyle:{
+                                paddingTop: '0px !important'
+                            }
+                            ,items: [{
+                                html: '<p>dsc</p>'
+                                ,bodyCssClass: 'desc'
+                                ,border: false
+                            },{
+                                xtype: 'semanager-grid-elements-chunks'
+                            }]
+                            //html: 'fgdfgsfdg'
+                        },{
+                            title: 'Элементы (16)'
+                        }]
+                    }]
                 },{
                     bodyCssClass: 'main-wrapper'
                     ,border: false
@@ -85,7 +133,7 @@ SEManager.panel.Home = function(config) {
                     }]
                 }]
             },{
-                title: _('chunks')
+                title: _('chunks') + ' (5)'
                 ,id: 'semanager-tab-chunks'
                 ,layout: 'form'
                 ,items: [{
@@ -98,6 +146,11 @@ SEManager.panel.Home = function(config) {
                     ,cls: 'main-wrapper'
                     ,type: 'chunk'
                 }]
+                ,listeners: {
+                    'afterRender': {fn:function(){
+                        console.log('ssss ch');
+                    },scope:this}
+                }
             },{
                 title: _('plugins')
                 ,id: 'semanager-tab-plugins'
@@ -112,6 +165,14 @@ SEManager.panel.Home = function(config) {
                     ,cls: 'main-wrapper'
                     ,type: 'plugin'
                 }]
+                ,listeners: {
+                    'load': {fn: function(){
+                        console.log('ssss pl2222');
+                    }}
+                    ,'afterRender': {fn:function(){
+                        console.log('ssss pl');
+                    },scope:this}
+                }
             },{
                 title: _('snippets')
                 ,id: 'semanager-tab-snippets'

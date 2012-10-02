@@ -65,7 +65,7 @@ SEManager.panel.Home = function(config) {
                             //,layout: 'form'
                         }
                         ,items: [{
-                            title: 'Файлы (4)'
+                            title: 'Файлы (5)'
                             ,bodyStyle:{
                                 paddingTop: '0px !important'
                             }
@@ -152,7 +152,7 @@ SEManager.panel.Home = function(config) {
                     },scope:this}
                 }
             },{
-                title: _('plugins')
+                title: _('plugins') + ' (11)'
                 ,id: 'semanager-tab-plugins'
                 ,layout: 'form'
                 ,items: [{
@@ -174,7 +174,7 @@ SEManager.panel.Home = function(config) {
                     },scope:this}
                 }
             },{
-                title: _('snippets')
+                title: _('snippets') + '(1114)'
                 ,id: 'semanager-tab-snippets'
                 ,layout: 'form'
                 ,items: [{

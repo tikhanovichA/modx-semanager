@@ -65,7 +65,7 @@ SEManager.panel.Home = function(config) {
                             //,layout: 'form'
                         }
                         ,items: [{
-                            title: 'Файлы (5)'
+                            title: 'Файлы (90)'
                             ,bodyStyle:{
                                 paddingTop: '0px !important'
                             }

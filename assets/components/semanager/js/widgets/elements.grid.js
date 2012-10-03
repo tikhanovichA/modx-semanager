@@ -56,6 +56,7 @@ SEManager.grid.Elements = function(config) {
         ,handler: this.clearFilter
     });
 
+    /*
     var ec = new Ext.ux.grid.CheckColumn({
         header: _('semanager.elements.static')
         ,dataIndex: 'static'
@@ -63,6 +64,7 @@ SEManager.grid.Elements = function(config) {
         ,width: 20
         ,sortable: true
     });
+    */
 
     this.cm = new Ext.grid.ColumnModel({
         columns: [this.exp,{
@@ -105,7 +107,7 @@ SEManager.grid.Elements = function(config) {
         ,getCellEditor: function(colIndex, rowIndex) {
             var field = this.getDataIndex(colIndex);
             if (field == 'static') {
-                var rec = config.store.getAt(rowIndex);
+                //var rec = config.store.getAt(rowIndex);
                 var o = MODx.load({
                     xtype: 'combo-boolean'
                 });
@@ -143,11 +145,8 @@ SEManager.grid.Elements = function(config) {
         }
     });
     SEManager.grid.Elements.superclass.constructor.call(this, config);
-    //this.on('celldblclick',this.onDirty,this);
 };
 Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
-
-
 
     renderDynField: function(v,md,rec,ri,ci,s,g) {
         var r = s.getAt(ri).data;
@@ -224,17 +223,6 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
             text: _('quick_update_' + this.config.type)
             ,handler: this.updateElement
         });
-        m.push('-');
-        m.push({
-            text: (this.menu.record.static)?_('semanager.elements.remove_static_file'):_('semanager.elements.make_static_file')
-            ,handler: this.updateStaticElement
-        });
-        m.push('-');
-        m.push({
-            text: _('semanager.elements.exclude_element')
-            ,handler: null
-            ,disable: true
-        });
         this.addContextMenuItem(m);
     }
     ,updateElement: function(btn,e){
@@ -254,33 +242,9 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         que.setValues(r);
         que.show(e.target);
     }
-    ,updateStaticElement: function(){
-        var r = this.menu.record;
-        r.clearCache = 1;
-        Ext.Ajax.request({
-            url: SEManager.config.connectorUrl
-            ,success: function(response) {
-                //p.setValue(response.responseText);
-                //p.enable();
-            }
-            ,params: {
-                action: '/elements/setelement'
-                ,element: r
-            }
-        });
-        //r.static_file = '123';
-        //r.refresh();
-        console.log(r);
-
-
-    }
 });
 
-Ext.reg('semanager-grid-elements-chunks', SEManager.grid.Elements,{
-    loadComplete: function(){
-        console.log('12345');
-    }
-});
+Ext.reg('semanager-grid-elements-chunks', SEManager.grid.Elements);
 Ext.reg('semanager-grid-elements-plugins', SEManager.grid.Elements);
 Ext.reg('semanager-grid-elements-snippets', SEManager.grid.Elements);
 Ext.reg('semanager-grid-elements-templates', SEManager.grid.Elements);

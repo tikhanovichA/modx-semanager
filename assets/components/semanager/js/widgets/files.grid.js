@@ -9,17 +9,25 @@ SEManager.grid.Files = function(config) {
 
     if (!config.tbar) {
         config.tbar = [{
-            text: _('quick_create_'+config.type)
-            ,handler: {
-                xtype: 'modx-window-quick-create-'+config.type
-                ,blankValues: true
+            xtype: 'button'
+            ,text: 'Создать элементы из файлов'
+            ,icon: MODx.config.template_url + 'images/restyle/icons/elements.png'
+            ,cls:'x-btn-text-icon'
+            ,style: {
+                paddingLeft: '5px'
+                ,float: 'left'
+                ,marginRight: '20px'
             }
+            //,handler: {
+            //    xtype: 'modx-window-quick-create-'+config.type
+            //    ,blankValues: true
+            //}
         }];
     }
     config.tbar.push('->',{
         xtype: 'modx-combo'
         ,name: 'filter_category'
-        ,id: 'semanager-filter-category'+config.type
+        ,id: 'semanager-filter-category-files'
         ,emptyText: _('semanager.elements.filter_by_category')
         ,fields: ['id','category']
         ,displayField: 'category'
@@ -37,7 +45,7 @@ SEManager.grid.Files = function(config) {
     },'-',{
         xtype: 'textfield'
         ,name: 'filter_name'
-        ,id: 'semanager-filter-name-'+config.type
+        ,id: 'semanager-filter-name-files'
         ,emptyText: _('semanager.elements.filter_by_name')+'...'
         ,listeners: {
             'change': {fn: this.filterByName, scope: this}
@@ -51,42 +59,34 @@ SEManager.grid.Files = function(config) {
         }
     },{
         xtype: 'button'
-        ,id: 'semanager-filter-clear-'+config.type
+        ,id: 'semanager-filter-clear-files'
         ,text: _('filter_clear')
         ,handler: this.clearFilter
     });
 
-    var ec = new Ext.ux.grid.CheckColumn({
-        header: _('semanager.elements.static')
-        ,dataIndex: 'static'
-        ,editable: false
-        ,width: 20
-        ,sortable: true
-    });
-
     this.cm = new Ext.grid.ColumnModel({
         columns: [this.exp,{
-            header: _('id')
-            ,dataIndex: 'id'
+            header: _('name')
+            ,dataIndex: 'filename'
             ,width: 15
             ,sortable: true
         },{
-            header: _('name')
-            ,dataIndex: (config.type=='template')?'templatename':'name'
+            header: 'Category'
+            ,dataIndex: 'category'
             ,width: 50
             ,sortable: true
         },{
-            header: _('semanager.elements.file')
-            ,dataIndex: 'static_file'
+            header: 'Type'
+            ,dataIndex: 'type'
             ,sortable: false
             ,editable: false
         },{
-            header: _('semanager.elements.static')
-            ,dataIndex: 'static'
+            header: 'Status'
+            ,dataIndex: 'status'
             ,width: 30
             ,sortable: true
             ,editable: true
-            ,renderer: this.renderDynField.createDelegate(this,[this],true)
+            //,renderer: this.renderDynField.createDelegate(this,[this],true)
         }]
         ,tools: [{
             id: 'plus'
@@ -119,15 +119,15 @@ SEManager.grid.Files = function(config) {
     Ext.applyIf(config,{
         cm: this.cm
         ,fields: ['id','name','static','static_file', 'description','category','snippet','plugincode','templatename','content','disabled']
-        ,id: 'semanager-grid-elements-' + config.type + 's'
+        ,id: 'semanager-grid-elements-files'
         ,url: SEManager.config.connectorUrl
         ,baseParams: {
-            action: 'elements/getlist'
+            action: 'files/getlist'
             ,type: config.type
         }
         ,clicksToEdit: 2
         ,autosave: true
-        ,save_action: 'elements/updatefromgrid'
+        ,save_action: 'files/updatefromgrid'
         ,plugins: this.exp
         ,autoHeight: true
         ,paging: true
@@ -143,10 +143,9 @@ SEManager.grid.Files = function(config) {
 
 
     });
-    SEManager.grid.Elements.superclass.constructor.call(this, config);
-    //this.on('celldblclick',this.onDirty,this);
+    SEManager.grid.Files.superclass.constructor.call(this, config);
 };
-Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
+Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
 
     renderDynField: function(v,md,rec,ri,ci,s,g) {
         var r = s.getAt(ri).data;
@@ -275,4 +274,4 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
     }
 });
 
-Ext.reg('semanager-grid-files', SEManager.grid.Elements);
+Ext.reg('semanager-grid-files', SEManager.grid.Files);

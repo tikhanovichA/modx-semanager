@@ -1,6 +1,6 @@
 <?php
 
-class modSEManagerGetListOfElementsProcessor extends modObjectGetListProcessor {
+class modSEManagerGetListOfFilesProcessor extends modObjectGetListProcessor {
     //public $permission = '';
     public $defaultSortField = 'name';
 
@@ -59,4 +59,4 @@ class modSEManagerGetListOfElementsProcessor extends modObjectGetListProcessor {
     }
 
 }
-return 'modSEManagerGetListOfElementsProcessor';
+return 'modSEManagerGetListOfFilesProcessor';

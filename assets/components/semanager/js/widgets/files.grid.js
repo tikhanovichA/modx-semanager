@@ -80,13 +80,6 @@ SEManager.grid.Files = function(config) {
             ,dataIndex: 'type'
             ,sortable: false
             ,editable: false
-        },{
-            header: 'Status'
-            ,dataIndex: 'status'
-            ,width: 30
-            ,sortable: true
-            ,editable: true
-            //,renderer: this.renderDynField.createDelegate(this,[this],true)
         }]
         ,tools: [{
             id: 'plus'

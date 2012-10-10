@@ -91,6 +91,58 @@ class SEManager {
         return $output;
     }
 
+    public function checkNewFileForElement($file){
+
+        $c = is_object($this->modx->getObject('modChunk', array('static' => 1,'static_file' => $file)));
+        $s = is_object($this->modx->getObject('modSnippet', array('static' => 1,'static_file' => $file)));
+        $p = is_object($this->modx->getObject('modPlugin', array('static' => 1,'static_file' => $file)));
+        $t = is_object($this->modx->getObject('modTemplate', array('static' => 1,'static_file' => $file)));
+
+        if(!$c&&!$s&&!$p&&!$t){
+            return true;
+        }
+
+        return false;
+
+    }
+
+    public function getNewFiles(){
+
+        $files = array();
+
+        foreach($this->scanElementsFolder() as $f){
+            if($this->checkNewFileForElement($f)){
+
+            }
+        }
+
+    }
+
+    public function scanElementsFolder(){
+
+        $files = array();
+        $path = $this->modx->getOption('semanager.elements_dir', null, MODX_ASSETS_PATH.'/elements/');
+
+        $this->_scanFolder($path, $files);
+
+        return $files;
+
+    }
+
+    private function _scanFolder($path, &$files) {
+        $d = dir($path);
+        while(false != ($e = $d->read())) {
+            if ($e != '.' and $e != '..'){
+                if(is_dir($d->path.$e)){
+                    $this->_scanFolder($d->path.$e.'/', &$files);
+                }else{
+                    $files[] = $d->path.$e;
+                }
+            }
+        }
+        $d->close();
+    }
+
     /**
      * Make synchronization of all Elements
      */

@@ -11,6 +11,7 @@ class modSEManagerGetListOfFilesProcessor extends modObjectGetListProcessor {
     public function getData() {
         $data = array();
 
+        /*
         $nf = $this->getProperty('namefilter');
         $cf = $this->getProperty('categoryfilter');
 
@@ -48,8 +49,9 @@ class modSEManagerGetListOfFilesProcessor extends modObjectGetListProcessor {
         if ($limit > 0) {
             $c->limit($limit,$start);
         }
+        */
 
-        $data['results'] = $this->modx->getCollection($this->classKey, $c);
+        //$data['results'] = $this->modx->getCollection($this->classKey, $c);
         return $data;
 
     }

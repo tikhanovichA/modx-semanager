@@ -113,8 +113,29 @@ class SEManager {
         foreach($this->scanElementsFolder() as $f){
             if($this->checkNewFileForElement($f)){
 
+                $path = $this->modx->getOption('semanager.elements_dir', null, MODX_ASSETS_PATH.'/elements/');
+                $type_separation = $this->modx->getOption('semanager.type_separation', null, true);
+                $use_categories = $this->modx->getOption('semanager.use_categories', null, true);
+
+                $file_path = array_reverse(explode('/',str_replace($path, '', $f)));
+
+                $filename = array_shift($file_path);
+
+                //$this->modx->log(E_ERROR, $filename);
+
+                $type = ($type_separation)? array_pop($file_path) : 'None';
+                $category = ($use_categories)? array_shift($file_path): 'None';
+
+                $files[] = array(
+                    'filename' => $filename,
+                    'category' => $category,
+                    'type' => $type,
+                    'path' => $f
+                );
             }
         }
+
+        return $files;
 
     }
 
@@ -260,7 +281,7 @@ class SEManager {
             $file_path = $path . str_replace('{name}', $element->name, $filename_tpl);
         }
 
-        $this->modx->log(E_ERROR, $file_path);
+        //$this->modx->log(E_ERROR, $file_path);
 
         $this->_makeDirs(dirname($file_path));
 

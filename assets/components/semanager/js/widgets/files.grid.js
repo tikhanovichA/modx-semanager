@@ -68,16 +68,22 @@ SEManager.grid.Files = function(config) {
         columns: [this.exp,{
             header: _('name')
             ,dataIndex: 'filename'
-            ,width: 15
+            ,width: 30
             ,sortable: true
         },{
             header: 'Category'
             ,dataIndex: 'category'
-            ,width: 50
+            ,width: 30
             ,sortable: true
         },{
             header: 'Type'
             ,dataIndex: 'type'
+            ,width: 30
+            ,sortable: false
+            ,editable: false
+        },{
+            header: 'Path'
+            ,dataIndex: 'path'
             ,sortable: false
             ,editable: false
         }]
@@ -111,12 +117,11 @@ SEManager.grid.Files = function(config) {
 
     Ext.applyIf(config,{
         cm: this.cm
-        ,fields: ['id','name','static','static_file', 'description','category','snippet','plugincode','templatename','content','disabled']
+        ,fields: ['filename','category','type', 'path']
         ,id: 'semanager-grid-elements-files'
         ,url: SEManager.config.connectorUrl
         ,baseParams: {
             action: 'files/getlist'
-            ,type: config.type
         }
         ,clicksToEdit: 2
         ,autosave: true
@@ -212,8 +217,8 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
     ,getMenu: function() {
         var m = [];
         m.push({
-            text: _('quick_update_' + this.config.type)
-            ,handler: this.updateElement
+            text: 'Make Element from File'
+            ,handler: this.makeElement
         });
         m.push('-');
         m.push({
@@ -228,9 +233,23 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
         });
         this.addContextMenuItem(m);
     }
-    ,updateElement: function(btn,e){
+    ,makeElement: function(btn,e){
         var r = this.menu.record;
         r.clearCache = 1;
+
+        Ext.Ajax.request({
+            url: SEManager.config.connectorUrl
+            ,success: function(response) {
+                //p.setValue(response.responseText);
+                //p.enable();
+            }
+            ,params: {
+                action: '/files/makeelement.class'
+                ,element: r
+            }
+        });
+
+        /*
         var que = MODx.load({
             xtype: 'modx-window-quick-update-' + this.config.type
             ,record: r
@@ -241,9 +260,10 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
                 },scope:this}
             }
         });
-        que.reset();
-        que.setValues(r);
-        que.show(e.target);
+        */
+        //que.reset();
+        //que.setValues(r);
+        //que.show(e.target);
     }
     ,updateStaticElement: function(){
         var r = this.menu.record;

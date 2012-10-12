@@ -1,6 +1,8 @@
 <?php
 
 class modSEManagerGetListOfFilesProcessor extends modObjectGetListProcessor {
+
+    public $semanager = null;
     //public $permission = '';
     public $defaultSortField = 'name';
 
@@ -10,6 +12,14 @@ class modSEManagerGetListOfFilesProcessor extends modObjectGetListProcessor {
      */
     public function getData() {
         $data = array();
+
+        $this->modx->loadClass('semanager.SEManager');
+        $this->semanager = new SEManager($this->modx);
+
+        $data['results'] = $this->semanager->getNewFiles();
+        $data['total'] = count($data['results']);
+
+        //$this->modx->log(E_ERROR, json_encode($data['results']));
 
         /*
         $nf = $this->getProperty('namefilter');
@@ -56,8 +66,8 @@ class modSEManagerGetListOfFilesProcessor extends modObjectGetListProcessor {
 
     }
 
-    public function prepareRow(xPDOObject $object) {
-        return $object->toArray();
+    public function prepareRow($object) {
+        return $object;
     }
 
 }

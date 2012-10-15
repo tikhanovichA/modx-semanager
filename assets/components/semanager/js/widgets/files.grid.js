@@ -237,14 +237,17 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
         var r = this.menu.record;
         r.clearCache = 1;
 
+        console.log(r);
+
         Ext.Ajax.request({
             url: SEManager.config.connectorUrl
             ,success: function(response) {
+                console.log(response);
                 //p.setValue(response.responseText);
                 //p.enable();
             }
             ,params: {
-                action: '/files/makeelement.class'
+                action: 'files/makeelement'
                 ,element: r
             }
         });

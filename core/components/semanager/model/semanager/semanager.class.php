@@ -50,12 +50,6 @@ class SEManager {
             'imgUrl' => $assetsUrl.'img/',
             'connectorUrl' => $assetsUrl.'connector.php',
 
-            'elements_dir' => $this->elements_dir = $this->modx->getOption('semanager.elements_dir', null, MODX_ASSETS_PATH.'/elements/'),
-            'filename_tpl_chunk' => $this->elements_dir = $this->modx->getOption('semanager.filename_tpl_chunk', null, '{name}.ch.html'),
-            'filename_tpl_plugin' => $this->elements_dir = $this->modx->getOption('semanager.filename_tpl_plugin', null, '{name}.pl.php'),
-            'filename_tpl_snippet' => $this->elements_dir = $this->modx->getOption('semanager.filename_tpl_snippet', null, '{name}.sn.php'),
-            'filename_tpl_template' => $this->elements_dir = $this->modx->getOption('semanager.filename_tpl_template', null, '{name}.tp.html'),
-
             'default_filenames' => array(
                 'template'  => 'tp.html',
                 'plugin'    => 'pl.php',
@@ -93,6 +87,19 @@ class SEManager {
 
     public function checkNewFileForElement($file){
 
+        // TODO: добавить проверку файла по маске
+        $fp = explode('/',$file);
+        $fn = array_pop($fp);
+
+        $fnch = $this->modx->getOption('semanager.filename_tpl_chunk', null, '.ch.html');
+        $fnpl = $this->modx->getOption('semanager.filename_tpl_plugin', null, '.pl.php');
+        $fnsn = $this->modx->getOption('semanager.filename_tpl_snippet', null, '.sn.php');
+        $fntp = $this->modx->getOption('semanager.filename_tpl_template', null, '.tp.html');
+
+        $this->modx->log(E_ERROR, stripcslashes($fnch));
+
+        $reg = '/([\w]+)\.('.$fnch.')/';
+
         $c = is_object($this->modx->getObject('modChunk', array('static' => 1,'static_file' => $file)));
         $s = is_object($this->modx->getObject('modSnippet', array('static' => 1,'static_file' => $file)));
         $p = is_object($this->modx->getObject('modPlugin', array('static' => 1,'static_file' => $file)));
@@ -123,6 +130,7 @@ class SEManager {
 
                 //$this->modx->log(E_ERROR, $filename);
 
+                // TODO: добавить дополнительно проверку, если файл не в папке вообще
                 $type = ($type_separation)? array_pop($file_path) : 'None';
                 $category = ($use_categories)? array_shift($file_path): 'None';
 
@@ -273,15 +281,13 @@ class SEManager {
         $path = $this->_makePath($element);
         $type = $this->_getTypeOfElement($element);
 
-        $filename_tpl = $this->modx->getOption('semanager.filename_tpl_' . $type, null, '{name}.el.src');
+        $filename_tpl = $this->modx->getOption('semanager.filename_tpl_' . $type, null, '');
 
         if($type == 'template'){
-            $file_path = $path . str_replace('{name}', $element->templatename, $filename_tpl);
+            $file_path = $path . $element->templatename . $filename_tpl;
         }else{
-            $file_path = $path . str_replace('{name}', $element->name, $filename_tpl);
+            $file_path = $path . $element->name . $filename_tpl;
         }
-
-        //$this->modx->log(E_ERROR, $file_path);
 
         $this->_makeDirs(dirname($file_path));
 

@@ -1,5 +1,7 @@
 <?php
 
+require_once MODX_CORE_PATH.'model/modx/processors/element/create.class.php';
+
 class modSEManagerMakeElementFromFileProcessor extends modElementCreateProcessor {
 
 

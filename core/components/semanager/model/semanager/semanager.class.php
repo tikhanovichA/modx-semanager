@@ -87,26 +87,38 @@ class SEManager {
 
     public function checkNewFileForElement($file){
 
-        // TODO: добавить проверку файла по маске
-        $fp = explode('/',$file);
-        $fn = array_pop($fp);
+        $fn = array_reverse(explode('.', array_pop(explode('/',$file))));
 
-        $fnch = $this->modx->getOption('semanager.filename_tpl_chunk', null, '.ch.html');
-        $fnpl = $this->modx->getOption('semanager.filename_tpl_plugin', null, '.pl.php');
-        $fnsn = $this->modx->getOption('semanager.filename_tpl_snippet', null, '.sn.php');
-        $fntp = $this->modx->getOption('semanager.filename_tpl_template', null, '.tp.html');
+        if(count($fn) <= 1) return false; // if file not have extension
 
-        $this->modx->log(E_ERROR, stripcslashes($fnch));
+        $ext = implode('.', array_reverse(array_slice($fn, 0, 2))); // extension
 
-        $reg = '/([\w]+)\.('.$fnch.')/';
+        $fnch = $this->modx->getOption('semanager.filename_tpl_chunk', null, 'ch.html');
+        if($ext === $fnch){
+            if(!is_object($this->modx->getObject('modChunk', array('static' => 1,'static_file' => $file)))){
+                return true;
+            }
+        }
 
-        $c = is_object($this->modx->getObject('modChunk', array('static' => 1,'static_file' => $file)));
-        $s = is_object($this->modx->getObject('modSnippet', array('static' => 1,'static_file' => $file)));
-        $p = is_object($this->modx->getObject('modPlugin', array('static' => 1,'static_file' => $file)));
-        $t = is_object($this->modx->getObject('modTemplate', array('static' => 1,'static_file' => $file)));
+        $fnpl = $this->modx->getOption('semanager.filename_tpl_plugin', null, 'pl.php');
+        if($ext === $fnpl){
+            if(!is_object($this->modx->getObject('modPlugin', array('static' => 1,'static_file' => $file)))){
+                return true;
+            }
+        }
 
-        if(!$c&&!$s&&!$p&&!$t){
-            return true;
+        $fnsn = $this->modx->getOption('semanager.filename_tpl_snippet', null, 'sn.php');
+        if($ext === $fnsn){
+            if(!is_object($this->modx->getObject('modSnippet', array('static' => 1,'static_file' => $file)))){
+                return true;
+            }
+        }
+
+        $fntp = $this->modx->getOption('semanager.filename_tpl_template', null, 'tp.html');
+        if($ext === $fntp){
+            if(!is_object($this->modx->getObject('modTemplate', array('static' => 1,'static_file' => $file)))){
+                return true;
+            }
         }
 
         return false;
@@ -124,6 +136,9 @@ class SEManager {
                 $type_separation = $this->modx->getOption('semanager.type_separation', null, true);
                 $use_categories = $this->modx->getOption('semanager.use_categories', null, true);
 
+                $category = 0;
+                $type = '0';
+
                 $file_path = array_reverse(explode('/',str_replace($path, '', $f)));
 
                 $filename = array_shift($file_path);
@@ -131,8 +146,20 @@ class SEManager {
                 //$this->modx->log(E_ERROR, $filename);
 
                 // TODO: добавить дополнительно проверку, если файл не в папке вообще
-                $type = ($type_separation)? array_pop($file_path) : 'None';
-                $category = ($use_categories)? array_shift($file_path): 'None';
+                if($type_separation){
+                    $type = array_pop($file_path);
+                    if($type == ''){
+                        $type = 0;
+                    }
+                }
+                //$type = ($type_separation)? array_pop($file_path) : 'None';
+
+                if($use_categories){
+                    $category = array_shift($file_path);
+                    if($category == ''){
+                        $category = 0;
+                    }
+                }
 
                 $files[] = array(
                     'filename' => $filename,
@@ -173,59 +200,6 @@ class SEManager {
     }
 
     /**
-     * Make synchronization of all Elements
-     */
-    public function syncAll(){
-
-        // папку elements нужно создавать при установке
-        // проверять на ее наличие нужно наверное в init
-        // TODO: перейти на переменную в config
-        $this->elements_dir = $this->config['elements_dir'];
-
-        if (!file_exists($this->elements_dir)){
-            $this->_makeDirs($this->elements_dir);
-        }
-
-        // 2. проверить настройку - использовать ли типы. если да, то создать папки нужные
-        $type_separation = $this->modx->getOption('semanager.type_separation', null, true);
-
-        if($type_separation){
-
-            $dirs = array(
-                'modTemplate' => $this->elements_dir . 'templates/',
-                'modChunk'    => $this->elements_dir . 'chunks/',
-                'modSnippet'  => $this->elements_dir . 'snippets/',
-                'modPlugin'   => $this->elements_dir . 'plugins/'
-            );
-
-            foreach($dirs as $type => $dir){
-                $this->_makeDirs($dir);
-                $this->manyElementsToStatic($type, $dir);
-            }
-
-        }else{
-
-            $types = array(
-                'modTemplate',
-                'modChunk',
-                'modSnippet',
-                'modPlugin'
-            );
-
-            foreach($types as $type){
-                $this->manyElementsToStatic($type);
-            }
-
-        }
-
-    }
-
-    //public function replaceFileElement($element){}
-    //public function removeFileElement($element){}
-    //public function renameFileElement($element){}
-
-
-    /**
      * Return type of Element (chunk, plugin, snippet or template)
      *
      * @param $element
@@ -264,12 +238,6 @@ class SEManager {
 
     }
 
-    private  function _gc(){
-
-        //$ed = $this->modx->getOption('semanager.elements_dir', null, MODX_ASSETS_PATH.'/elements/');
-
-    }
-
     /**
      * Make static element. Create static file.
      *
@@ -284,9 +252,9 @@ class SEManager {
         $filename_tpl = $this->modx->getOption('semanager.filename_tpl_' . $type, null, '');
 
         if($type == 'template'){
-            $file_path = $path . $element->templatename . $filename_tpl;
+            $file_path = $path . $element->templatename .'.'. $filename_tpl;
         }else{
-            $file_path = $path . $element->name . $filename_tpl;
+            $file_path = $path . $element->name .'.'. $filename_tpl;
         }
 
         $this->_makeDirs(dirname($file_path));

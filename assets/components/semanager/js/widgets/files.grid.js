@@ -71,18 +71,20 @@ SEManager.grid.Files = function(config) {
             ,width: 30
             ,sortable: true
         },{
-            header: 'Category'
+            header: _('category')
             ,dataIndex: 'category'
             ,width: 30
             ,sortable: true
+            ,renderer: this.categoryRender
         },{
-            header: 'Type'
+            header: _('type')
             ,dataIndex: 'type'
             ,width: 30
             ,sortable: false
             ,editable: false
+            ,renderer: this.typeRender
         },{
-            header: 'Path'
+            header: _('path')
             ,dataIndex: 'path'
             ,sortable: false
             ,editable: false
@@ -145,7 +147,28 @@ SEManager.grid.Files = function(config) {
 };
 Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
 
-    renderDynField: function(v,md,rec,ri,ci,s,g) {
+    typeRender: function(r) {
+
+        if(r == 0){
+            return 'no_type';
+        }
+
+        return r;
+
+        //return _(r.slice(0,-1))
+    }
+
+    ,categoryRender: function(r) {
+
+        //console.log(r);
+
+        if(r == 0){
+            return _('no_category');
+        }
+        return r;
+    }
+
+    ,renderDynField: function(v,md,rec,ri,ci,s,g) {
         var r = s.getAt(ri).data;
         var f,idx;
         var oz = v;
@@ -214,28 +237,37 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
         this.getBottomToolbar().changePage(1);
         this.refresh();
     }
-    ,getMenu: function() {
+    ,getMenu: function(r) {
+
+
+        console.log(r);
+
         var m = [];
         m.push({
             text: 'Make Element from File'
             ,handler: this.makeElement
-        });
-        m.push('-');
-        m.push({
-            text: (this.menu.record.static)?_('semanager.elements.remove_static_file'):_('semanager.elements.make_static_file')
-            ,handler: this.updateStaticElement
-        });
-        m.push('-');
-        m.push({
-            text: _('semanager.elements.exclude_element')
-            ,handler: null
-            ,disable: true
         });
         this.addContextMenuItem(m);
     }
     ,makeElement: function(btn,e){
         var r = this.menu.record;
         r.clearCache = 1;
+
+        if(r.type == null){
+            MODx.msg.confirm({
+                title: 'Выберите тип элемента'
+                ,text: 'context_remove_confirm'
+                //,url: MODx.config.connectors_url+'context/index.php'
+                //,params: {
+                //    action: 'remove'
+                //   ,key: key
+                //}
+                //,listeners: {
+                //    'success': {fn:function() {this.refresh();},scope:this}
+                //}
+            });
+            //alert('dfdfasdf');
+        }
 
         console.log(r);
 
@@ -267,26 +299,6 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
         //que.reset();
         //que.setValues(r);
         //que.show(e.target);
-    }
-    ,updateStaticElement: function(){
-        var r = this.menu.record;
-        r.clearCache = 1;
-        Ext.Ajax.request({
-            url: SEManager.config.connectorUrl
-            ,success: function(response) {
-                //p.setValue(response.responseText);
-                //p.enable();
-            }
-            ,params: {
-                action: '/elements/setelement'
-                ,element: r
-            }
-        });
-        //r.static_file = '123';
-        //r.refresh();
-        console.log(r);
-
-
     }
 });
 
